@@ -17,9 +17,9 @@
 
 # You can override any of these settings on a per-topology basis
 # Group number
-GROUPNUMBER=255
-# Node configs  
-CONFIGDIR=cfg
+GROUPNUMBER=10
+# Node configs
+CONFIGDIR=frrouting_cfg
 # boot script name
 BOOT="boot"
 # startup script name
@@ -32,10 +32,20 @@ PREFIXLEN=32
 # This function describes the network topology that we want to emulate
 function mk_topo {
     echo "@@ Adding links and nodes"
-    # Build a small network BELNET - BXL - LLN
+    #                       P1 ------ P3
+    #                        \        /
+    # Build a small network   \      /
+    #                          \    /
+    #                            P2
     # Nodes are creadted on the fly, and their interface are assigned as
     # <node name>-eth<count>, where count starts at 0 and is increased by 1
     # after each new interface
-    add_link ROUTER0 ROUTER1
+    # e.g. P1-eth0 links to P2-eth0
+    add_link P1 P2
+    # P1-eth1 links to P3-eth0
+    add_link P1 P3
+    # P2-eth1 links to P3-eth1
+    add_link P2 P3
+
 }
 
