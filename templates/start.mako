@@ -3,9 +3,8 @@ ldconfig
 %for interface in data['interfaces']:
 
 # Assigning IP addr for ${interface['name']}
-interface ${interface['name']}
-    ip link set dev ${interface['name']}
-    ip -6 addr add ${interface['ip']} dev ${interface['name']}
+ip link set dev ${interface['name']} up
+ip -6 addr add ${interface['ip']} dev ${interface['name']}
 %endfor
 
 # zebra is required to make the link between all FRRouting daemons
