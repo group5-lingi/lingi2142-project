@@ -34,6 +34,13 @@ def main():
             with open("../isp/" + conf['name'] + "/" + conf['name'].lower() + "_ospf.conf", "w") as f:
                 f.write(template.render(data=conf))
 
+        print("Creating BGP config")
+        template = Template(filename="bgp.mako")
+        for conf in data:
+            with open("../isp/" + conf['name'] + "/" + conf['name'].lower() + "_bgp.conf", "w") as f:
+                f.write(template.render(data=conf))
+
+
         print("Creating zebra config")
         template = Template(filename="zebra.mako")
         for conf in data:

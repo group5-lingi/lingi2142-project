@@ -16,6 +16,10 @@ ip -6 addr add ${data['lo_ip']} dev lo
 LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/${data['name'].lower()}.api -i /tmp/${data['name'].lower()}_zebra.pid &
 
 # launching FRRouting OSPF daemon
-LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/${data['name'].lower()}_ospf.conf -z /tmp/${data['name'].lower()}.api -i /tmp/${data['name'].lower()}_ospf6d.pid -A 127.0.0.1
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/${data['name'].lower()}_ospf.conf -z /tmp/${data['name'].lower()}.api -i /tmp/${data['name'].lower()}_ospf6d.pid -A 127.0.0.1 &
 
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/${data['name'].lower()}_bgp.conf -z /tmp/${data['name'].lower()}.api -i /tmp/${data['name'].lower()}_bgp.pid -A 127.0.0.1 &
 
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib

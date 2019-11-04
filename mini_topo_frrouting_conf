@@ -42,10 +42,8 @@ function mk_topo {
     # after each new interface
     # e.g. P1-eth0 links to P2-eth0
     add_link P1 P2
-    # P1-eth1 links to P3-eth0
-    add_link P1 P3
-    # P2-eth1 links to P3-eth1
-    add_link P2 P3
+    bridge_node P1 eth1 rubicon
+    bridge_node P2 eth2 styx
 
 }
 

@@ -1,8 +1,6 @@
 !
 ! OSPF configuration for ${data['name']}
 !
-hostname ${data['hostname']}
-password ${data['passwd']}
 log stdout
 service advanced-vty
 !

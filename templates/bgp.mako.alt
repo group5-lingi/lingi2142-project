@@ -1,0 +1,20 @@
+log stdout
+debug bgp zebra
+debug bgp neighbor-events
+!
+router bgp ${data["as_num"]}
+  bgp router-id ${data["routerbgp_id"]}  
+  no bgp default ipv4-unicast
+  %for neighbor in data["bgp_neighbors"]:
+  neighbor ${neighbor["ip"]} remote-as ${neighbor["as_num"]}
+  neighbor ${neighbor["ip"]} interface ${data["interfaces"][0]["name"]}
+  neighbor ${neighbor["ip"]} update-source ${data["lo_ip"].split("/")[0]}
+  neighbor ${neighbor["ip"]} ebgp-multihop
+  %endfor  
+  !
+  address-family ipv6 unicast
+    %for neighbor in data["bgp_neighbors"]:
+    neighbor ${neighbor["ip"]} activate
+    %endfor
+  exit-address-family
+!
