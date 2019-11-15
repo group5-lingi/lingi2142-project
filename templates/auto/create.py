@@ -50,7 +50,7 @@ def create_network(data):
         net.connect_pops()
         net.setup_bgp()
 
-        pprint(net.export())
+        json.dump(net.export(), sys.stdout, indent=4)
 
                 
 
@@ -106,7 +106,7 @@ class Router:
                 else:
                         self.hostname = hostname
                 self.router_id = router_id
-                self.routerbgp_id = router_id
+                self.routerbgp_id = routerbgp_id
                 self.lo_ip = ip_address(IP_CONF["GROUP5"]+IP_CONF["types"]["lo"]+self.pop.location+"::") + len(pop.routers)+1
                 self.lo_ip = str(self.lo_ip) + IP_CONF["prefixes"]["lo"]
                 self.as_num = IP_CONF["AS"]
