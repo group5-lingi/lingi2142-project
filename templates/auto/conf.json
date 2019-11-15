@@ -1,0 +1,93 @@
+[
+    {
+	"name": "P1",
+	"hostname": "P1",
+	"passwd": "zebra",
+	"router_id": "255.251.23.5",
+	"routerbgp_id" : "20.20.20.20",
+	"lo_ip" : "fde4:5:20::01/128",
+        "as_num": 65005,
+        "ebgp_neighbors": [
+	    {
+		"ip" : "fde4::1",
+		"as_num" : 64512
+	    }
+	],
+	"ibgp_neighbors": [
+            {
+	    	"ip": "fde4:5:20::02",
+            	"as_num": 65005
+	    }
+	],
+	"interfaces": [
+	    {
+		"name": "P1-eth0",
+		"cost": 5,
+		"hello_time": 10,
+		"dead_time": 40,
+		"instance_id": 0,
+		"area": "0.0.0.0",
+		"active": true,
+		"ip": "fde4:5:12::11/64",
+		"description": "Link to P2"
+	    },
+	    {
+		"name": "rubicon",
+		"cost": 5,
+		"hello_time": 10,
+		"dead_time": 40,
+		"instance_id": 0,
+		"area": "0.0.0.0",
+		"active": true,
+		"ip": "fde4::5:cafe/64",
+		"description": "Link to the WORLD!!"
+	    }
+	    
+	]
+    },
+    {
+	"name": "P2",
+	"hostname": "P2",
+	"passwd": "zebra",
+	"router_id": "255.251.23.6",
+	"routerbgp_id" : "20.20.20.21",
+	"lo_ip" : "fde4:5:20::02/128",
+        "as_num": 65005,
+	"ebgp_neighbors": [
+	    {
+		"ip" : "fde4::4:beef",
+		"as_num" : 65004
+	    }
+	],
+        "ibgp_neighbors": [
+            {
+	    	"ip": "fde4:5:20::01",
+            	"as_num": 65005
+	    }
+	],
+	"interfaces": [
+	    {
+		"name": "P2-eth0",
+		"cost": 5,
+		"hello_time": 10,
+		"dead_time": 40,
+		"instance_id": 0,
+		"area": "0.0.0.0",
+		"active": true,
+		"ip": "fde4:5:12::22/64",
+		"description": "Link to P1"
+	    },
+	    {
+		"name": "styx",
+		"cost": 5,
+		"hello_time": 10,
+		"dead_time": 40,
+		"instance_id": 0,
+		"area": "0.0.0.0",
+		"active": true,
+		"ip": "fde4::5:babe/64",
+		"description": "Border router"
+	    }	    
+	]
+    }
+]
