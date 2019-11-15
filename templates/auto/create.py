@@ -46,7 +46,6 @@ def create_network(data):
         total_routers = 0
         i = 0
         net.create_pops()
-        net.add_core_routers()
         net.connect_pops()
         net.setup_bgp()
 
@@ -90,14 +89,16 @@ class BGPNeighbor:
 
 class Router:
 
-        def __init__(self, pop, name, router_id, routerbgp_id, passwd="zebra", type=["P"],  hostname=None):
+        def __init__(self, pop, name, router_id, routerbgp_id, passwd="zebra", type=["P"],  hostname=None, color=None):
                 # default type P : Provider, PE : Customer Edge, RR : Router reflector
                 self.pop = pop # Point of Presence
-                self.color = None # 0 - Red, 1 - Blue
-                if len(pop.routers) == 0:
-                        self.color = 0
+                if color != None:
+                        self.color = color # 0 - Red, 1 - Blue
                 else:
-                        self.color = 1 - pop.routers[len(pop.routers) - 1].color # takes the other color of the recently added
+                        if len(pop.routers) == 0:
+                                self.color = 0
+                        else:
+                                self.color = 1 - pop.routers[len(pop.routers) - 1].color # takes the other color of the recently added
                 self.type = type                                       # router
                 self.name = name+"-"+pop.location_name
                 self.passwd = passwd
@@ -143,44 +144,6 @@ class Router:
                         self.ibgp_neighbors.append(neighbor)
 
     
-        def add_link(self, router, start=None): # creates a p2p between self and the other router
-                subnet = IP_CONF["GROUP5"] + IP_CONF["types"]["p2p"]
-                total_inter_pop_links = start
-            
-                if self.pop.location_name != router.pop.location_name:
-                        # for connections between routers in different pops
-                        subnet += IP_CONF["locations"]["P2P-INTER-POP"]
-                        subnet += "::"
-
-                        my_if = Interface(self, description="Link to "+router.name)
-                        my_if.ip = str(ip_address(subnet) + start) + IP_CONF["prefixes"]["p2p"]
-                        self.interfaces.append(my_if)
-                        total_inter_pop_links += 1
-            
-                        router_if = Interface(router, description="Link to "+self.name)
-                        router_if.ip = str(ip_address(subnet) + total_inter_pop_links) + IP_CONF["prefixes"]["p2p"]
-                        router.interfaces.append(router_if)
-                        total_inter_pop_links += 1
-
-                else :
-                
-                        subnet += IP_CONF["locations"][self.pop.location_name]
-                        subnet += "::"
-                        my_if = Interface(self, description="Link to "+router.name)
-                        my_if.ip = str(ip_address(subnet) + len(self.interfaces) + len(router.interfaces) + 1) + IP_CONF["prefixes"]["p2p"]
-                        self.interfaces.append(my_if)
-            
-                        router_if = Interface(router, description="Link to "+self.name)
-                        router_if.ip = str(ip_address(subnet) + len(self.interfaces) + len(router.interfaces) + 1) + IP_CONF["prefixes"]["p2p"]            
-                        router.interfaces.append(router_if)
-
-
-                self.direct_neighbors[router.name] = router
-                router.direct_neighbors[self.name] = self
-        
-
-
-
         """
         Returns the Router as a dict
         """
@@ -190,6 +153,7 @@ class Router:
                 d['direct_neighbors'] = [r for r in self.direct_neighbors.keys()]
                 d['pop_name'] = self.pop.location_name
                 d['ebgp_neighbors'] = [n.export() for n in self.ebgp_neighbors]
+                d['ibgp_neighbors'] = [n.export() for n in self.ibgp_neighbors]                
                 d.pop('pop')
 
         
@@ -217,7 +181,8 @@ class POP:
                 r2 = Router(self, net.generate_next_hostname(), net.generate_next_router_id(),
                             net.generate_next_routerbgp_id())
                 self.add_router(r2)
-                r1.add_link(r2)
+
+                net.link_routers(r1, r2)
 
         def update_type(self, type):
                 self.type = type
@@ -264,6 +229,7 @@ class Network:
                                 break
                         else:
                                 pop = POP(location)
+                                pop.add_core_routers(self)
                                 if pop.location_name in self.data['core']:
                                         pop.update_type("core")
                                         self.setup_core_pop(pop)
@@ -273,15 +239,67 @@ class Network:
 
         def setup_core_pop(self, pop):
                 # should add two route reflectors
-                pop.add_router(Router(pop, self.generate_next_hostname(),
-                                      self.generate_next_router_id(),
-                                      self.generate_next_routerbgp_id(), type=["P", "RR"]))
+                rr1 = Router(pop, self.generate_next_hostname(),
+                             self.generate_next_router_id(),
+                             self.generate_next_routerbgp_id(), type=["P", "RR"], color=0)
+                pop.add_router(rr1)
+                rr2 = Router(pop, self.generate_next_hostname(),
+                             self.generate_next_router_id(),
+                             self.generate_next_routerbgp_id(), type=["P", "RR"], color=1)
+                pop.add_router(rr2)
+
+                #connect route reflectors to every other router in our core POP
+                for r in pop.routers:
+                        self.link_routers(rr1, r)
+                        self.link_routers(rr2, r)
+
+                # link the two together
+                self.link_routers(rr1, rr2)
+
+  
+
+        # adds the interfaces the two routers will use to communicate
+        def link_routers(self,r1, r2):
+                if r1.name in r2.direct_neighbors or r1.name == r2.name or r1 == r2:
+                        return
+
+                
+                subnet = self.config["GROUP5"] + self.config["types"]["p2p"]
+            
+                if r1.pop.location_name != r2.pop.location_name:
+                        # for connections between routers in different pops
+                        subnet += self.config["locations"]["P2P-INTER-POP"]
+                        subnet += "::"
+
+                        r1_if = Interface(r1, description="Link to "+r2.name)
+                        r1_if.ip = str(ip_address(subnet) + self.total_inter_pop_links) + self.config["prefixes"]["p2p"]
+                        r1.interfaces.append(r1_if)
+                        self.total_inter_pop_links += 1
+            
+                        r2_if = Interface(r2, description="Link to "+r1.name)
+                        r2_if.ip = str(ip_address(subnet) + self.total_inter_pop_links) + self.config["prefixes"]["p2p"]
+                        r2.interfaces.append(r2_if)
+                        self.total_inter_pop_links += 1
+
+                else :
+                
+                        subnet += self.config["locations"][r1.pop.location_name]
+                        subnet += "::"
+                        r1_if = Interface(r1, description="Link to "+r2.name)
+                        r1_if.ip = str(ip_address(subnet) + len(r1.interfaces) + len(r2.interfaces) + 1) + self.config["prefixes"]["p2p"]
+
+                        r1.interfaces.append(r1_if)
+            
+                        r2_if = Interface(r2, description="Link to "+r1.name)
+                        r2_if.ip = str(ip_address(subnet) + len(r1.interfaces) + len(r2.interfaces) + 1) + self.config["prefixes"]["p2p"]            
+                        r2.interfaces.append(r2_if)
 
 
-                pop.add_router(Router(pop, self.generate_next_hostname(),
-                                      self.generate_next_router_id(),
-                                      self.generate_next_routerbgp_id(), type=["P", "RR"]))
+                r1.direct_neighbors[r2.name] = r2
+                r2.direct_neighbors[r1.name] = r1
         
+
+
 
         def generate_next_router_id(self):
                 id = str(self.init_router_id + 1)
@@ -313,9 +331,9 @@ class Network:
                 for p in [pop for pop in self.pops if pop.name != router.pop.name]:
                         for r in p.routers:
                                 if r.color == router.color and r.name not in router.direct_neighbors and "RR" not in r.type:
-                                       router.add_link(r, start=self.total_inter_pop_links)
+                                       self.link_routers(router, r)
                                        self.total_inter_pop_links += 2
-
+                                       
 
         def setup_bgp(self):
                 for info in self.data['bgp']:
@@ -332,7 +350,54 @@ class Network:
                                 router.add_interface(description="eBGP Link to "+extern_as,
                                                      ip=if_ip,
                                                      name=info[5])
-                                                 
+                        
+                        elif info[0] == "INT":
+                                if info[1] == "odd-even":
+                                        # setup ibg sessions with same colored routers
+                                        self.setup_ibgp_odd_even()
+
+
+        def get_route_reflectors(self):
+                rr = []
+                core_pops = [self.get_pop(name) for name in self.data['core']]
+                for cp in core_pops:
+                        for r in cp.routers:
+                                if "RR" in r.type:
+                                        rr.append(r)
+                return rr
+
+                                        
+        def setup_ibgp_odd_even(self):
+                rr = self.get_route_reflectors()
+                for r in rr:
+                        self.setup_ibgp_same_color(r)
+
+
+        def get_all_routers(self, type=None):
+                routers = []
+                for p in self.pops:
+                        for r in p.routers:
+                                routers.append(r)
+                return routers
+
+
+
+        def create_ibgp_session(self, r1, r2):
+                r1_neighbor = BGPNeighbor(r2.lo_ip, r2.as_num, "IBGP")
+                r2_neighbor = BGPNeighbor(r1.lo_ip, r1.as_num, "IBGP")
+
+                if r1.name == r2.name or r1 == r2:
+                        return
+                else:
+                        r1.add_bgp_neighbor(r1_neighbor, type="i")
+                        r2.add_bgp_neighbor(r2_neighbor, type="i")
+                                                                                        
+                
+        def setup_ibgp_same_color(self,  rr):
+                routers = self.get_all_routers()
+                for r in routers:
+                        if r.color == rr.color:
+                                self.create_ibgp_session(r, rr)
 
         def export(self):
                 return {
