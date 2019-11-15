@@ -3,7 +3,7 @@ pops 2
 # route reflectors
 core BR
 bgp EXT SC AT fde4::1:dead/64 65001 styx
-bgp EXT P AT fde4:6:deaf/64 65006 rubicon
+bgp EXT P AT fde4::6:deaf/64 65006 rubicon
 bgp EXT C AT fde4::4:beef/64 65004 celadon
 bgp EXT CB AT fde4::7:face/64 65007 kerlaugar
 # the following connects the routers to the

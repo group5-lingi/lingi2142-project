@@ -18,7 +18,7 @@
                     "ebgp_neighbors": [],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::3/128",
+                            "ip": "fde4:5:21::3",
                             "as_num": 65005,
                             "type": "IBGP"
                         }
@@ -92,7 +92,7 @@
                     "ebgp_neighbors": [],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::4/128",
+                            "ip": "fde4:5:21::4",
                             "as_num": 65005,
                             "type": "IBGP"
                         }
@@ -167,12 +167,12 @@
                     "ebgp_neighbors": [],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::1/128",
+                            "ip": "fde4:5:21::1",
                             "as_num": 65005,
                             "type": "IBGP"
                         },
                         {
-                            "ip": "fde4:5:22::1/128",
+                            "ip": "fde4:5:22::1",
                             "as_num": 65005,
                             "type": "IBGP"
                         }
@@ -235,12 +235,12 @@
                     "ebgp_neighbors": [],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::2/128",
+                            "ip": "fde4:5:21::2",
                             "as_num": 65005,
                             "type": "IBGP"
                         },
                         {
-                            "ip": "fde4:5:22::2/128",
+                            "ip": "fde4:5:22::2",
                             "as_num": 65005,
                             "type": "IBGP"
                         }
@@ -315,29 +315,29 @@
                     "as_num": 65005,
                     "ebgp_neighbors": [
                         {
-                            "ip": "fde4::1:dead/64",
+                            "ip": "fde4::1:dead",
                             "as_num": "65001",
                             "type": "SC"
                         },
                         {
-                            "ip": "fde4:6:deaf/64",
+                            "ip": "fde4::6:deaf",
                             "as_num": "65006",
                             "type": "P"
                         },
                         {
-                            "ip": "fde4::4:beef/64",
+                            "ip": "fde4::4:beef",
                             "as_num": "65004",
                             "type": "C"
                         },
                         {
-                            "ip": "fde4::7:face/64",
+                            "ip": "fde4::7:face",
                             "as_num": "65007",
                             "type": "CB"
                         }
                     ],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::3/128",
+                            "ip": "fde4:5:21::3",
                             "as_num": 65005,
                             "type": "IBGP"
                         }
@@ -431,7 +431,7 @@
                     "ebgp_neighbors": [],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:21::4/128",
+                            "ip": "fde4:5:21::4",
                             "as_num": 65005,
                             "type": "IBGP"
                         }

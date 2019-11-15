@@ -162,8 +162,9 @@ class Router:
         
 
 class POP:
-        def __init__(self, location, name="POP-", type="limb"):
+        def __init__(self, network, location, name="POP-", type="limb"):
                 self.routers = []
+                self.network = network
                 self.type = type
                 self.name = name + str(location) + "-"+type
                 self.location = IP_CONF["locations"][location] # str
@@ -173,16 +174,18 @@ class POP:
                 self.routers.append(router)
 
 
-        def add_core_routers(self, net):
-                r1 = Router(self, net.generate_next_hostname(), net.generate_next_router_id(),
-                            net.generate_next_routerbgp_id())
+        def add_core_routers(self):
+                r1 = Router(self, self.network.generate_next_hostname(),
+                            self.network.generate_next_router_id(),
+                            self.network.generate_next_routerbgp_id())
                 self.add_router(r1)
             
-                r2 = Router(self, net.generate_next_hostname(), net.generate_next_router_id(),
-                            net.generate_next_routerbgp_id())
+                r2 = Router(self, self.network.generate_next_hostname(),
+                            self.network.generate_next_router_id(),
+                            self.network.generate_next_routerbgp_id())
                 self.add_router(r2)
 
-                net.link_routers(r1, r2)
+                self.network.link_routers(r1, r2)
 
         def update_type(self, type):
                 self.type = type
@@ -200,11 +203,17 @@ class POP:
                 }
 
 
-
+"""
+Represents our ISP Network
+"""
 class Network:
         def __init__(self, data, config):
-                self.name = config['name']
+                """ 
+                data : parsed auto_topo file
+                config : dict of ipconf.json
+                """
                 self.config = config
+                self.name = config['name']
                 self.pops = []
                 self.total_routers = 0
                 self.total_inter_pop_links = 1
@@ -223,13 +232,14 @@ class Network:
 
 
         def create_pops(self):
+                """ Creates our points of presence"""
                 i = 0
                 for location in self.config['locations']:
                         if i == self.data['pops'] or location == "P2P-INTER-POP":
                                 break
                         else:
-                                pop = POP(location)
-                                pop.add_core_routers(self)
+                                pop = POP(self, location)
+                                pop.add_core_routers()
                                 if pop.location_name in self.data['core']:
                                         pop.update_type("core")
                                         self.setup_core_pop(pop)
@@ -320,10 +330,14 @@ class Network:
         def add_core_routers(self):
                 for p in self.pops:
                         #add two core routers to each POP
-                        p.add_core_routers(self)
-
+                        p.add_core_routers()
+        
         def connect_pops(self):
+                """ Connects the Points of Presence using Odd - Even """
                 for cp in self.pops:
+                        # Connect every router that is not a route reflector
+                        # this is because route reflectors are configured
+                        # different from our ordinary routers
                         for r in [ r for r in cp.routers if "RR" not in r.type]:
                                 self.connect_router_to_network(r)
 
@@ -336,12 +350,13 @@ class Network:
                                        
 
         def setup_bgp(self):
+                """ setups up bgp based on the config : auto_topo"""
                 for info in self.data['bgp']:
                         if info[0] == "EXT":
                                 # setup the external bgp session
                                 # defaults to use the pops first routere
                                 router = self.get_pop(info[2]).routers[0]
-                                router.add_bgp_neighbor(BGPNeighbor(info[3], info[4], info[1]), type="e")
+                                router.add_bgp_neighbor(BGPNeighbor(info[3].split("/")[0], info[4], info[1]), type="e")
 
                                 # add the corresponding interface
                                 extern_as = info[4]
@@ -383,8 +398,8 @@ class Network:
 
 
         def create_ibgp_session(self, r1, r2):
-                r1_neighbor = BGPNeighbor(r2.lo_ip, r2.as_num, "IBGP")
-                r2_neighbor = BGPNeighbor(r1.lo_ip, r1.as_num, "IBGP")
+                r1_neighbor = BGPNeighbor(r2.lo_ip.split("/")[0], r2.as_num, "IBGP")
+                r2_neighbor = BGPNeighbor(r1.lo_ip.split("/")[0], r1.as_num, "IBGP")
 
                 if r1.name == r2.name or r1 == r2:
                         return
