@@ -1,0 +1,43 @@
+#! /bin/sh
+ldconfig
+
+# Assigning IP addr for P5-AT-eth0
+ip link set dev P5-AT-eth0 up
+ip -6 addr add fde4:5:12::1/127 dev P5-AT-eth0
+
+# Assigning IP addr for P5-AT-eth1
+ip link set dev P5-AT-eth1 up
+ip -6 addr add fde4:5:1b::2/127 dev P5-AT-eth1
+
+# Assigning IP addr for styx
+ip link set dev styx up
+ip -6 addr add fde4::5:dead/64 dev styx
+
+# Assigning IP addr for rubicon
+ip link set dev rubicon up
+ip -6 addr add fde4::5:deaf/64 dev rubicon
+
+# Assigning IP addr for celadon
+ip link set dev celadon up
+ip -6 addr add fde4::5:babe/64 dev celadon
+
+# Assigning IP addr for kerlaugar
+ip link set dev kerlaugar up
+ip -6 addr add fde4::5:face/64 dev kerlaugar
+
+# Assiging IP addr for loopback
+ip -6 addr add fde4:5:22::1/128 dev lo
+		 
+
+# zebra is required to make the link between all FRRouting daemons
+# and the linux kernel routing table
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p5-at.api -i /tmp/p5-at_zebra.pid &
+
+# launching FRRouting OSPF daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/p5-at_ospf.conf -z /tmp/p5-at.api -i /tmp/p5-at_ospf6d.pid -A 127.0.0.1 &
+
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/p5-at_bgp.conf -z /tmp/p5-at.api -i /tmp/p5-at_bgp.pid -A 127.0.0.1 &
+
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib
