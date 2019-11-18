@@ -1,0 +1,28 @@
+#!/bin/bash
+GROUPNUMBER=5
+# Node configs
+CONFIGDIR=isp
+# boot script name
+BOOT="boot"
+# startup script name
+STARTUP="start"
+PREFIXBASE="fde4:${GROUPNUMBER}"
+PREFIXLEN=32
+# You can reuse the above two to generate ip addresses/routes, ...
+# e.g. "${PREFIXBASE}:1234::/$((PREFIXLEN+16))"
+# This function describes the network topology that we want to emulate
+function mk_topo {
+	add_link P1-BR P2-BR
+	add_link P1-BR P3-BR
+	add_link P1-BR P4-BR
+	add_link P1-BR P5-AT
+	add_link P2-BR P3-BR
+	add_link P2-BR P4-BR
+	add_link P2-BR P6-AT
+	add_link P3-BR P4-BR
+	add_link P5-AT P6-AT
+	bridge_node P5-AT eth1 styx
+	bridge_node P5-AT eth2 rubicon
+	bridge_node P5-AT eth3 celadon
+	bridge_node P5-AT eth4 kerlaugar
+}

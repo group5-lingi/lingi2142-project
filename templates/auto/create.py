@@ -4,11 +4,14 @@
 # Usage : ./create.py auto_topo
 import sys
 import json
-from argparse import FileType, ArgumentParser
 from pprint import pprint
 from ipaddress import ip_address
 
 IP_CONF = None
+
+
+
+INIT_FILE='#!/bin/bash\nGROUPNUMBER=5\n# Node configs\nCONFIGDIR=isp\n# boot script name\nBOOT="boot"\n# startup script name\nSTARTUP="start"\nPREFIXBASE="fde4:${GROUPNUMBER}"\nPREFIXLEN=32\n# You can reuse the above two to generate ip addresses/routes, ...\n# e.g. "${PREFIXBASE}:1234::/$((PREFIXLEN+16))"\n# This function describes the network topology that we want to emulate\nfunction mk_topo {\n'
 
 
 def create_from_file(filename):
@@ -34,8 +37,8 @@ def create_from_file(filename):
                         f.close()
         except:
                 sys.exit("error in parsing")
-        create_network(data)
-
+        net = create_network(data)
+        generate_mini_topo(net)
 
                                                         
 
@@ -50,7 +53,27 @@ def create_network(data):
         net.setup_bgp()
 
         json.dump(net.export(), sys.stdout, indent=4)
+        return net
 
+def generate_mini_topo(network):
+        with open('isp_topo', 'w') as f:
+                f.write(INIT_FILE)
+                add_links(f, network)
+                f.write("}\n")
+                f.close()
+
+def add_links(f, net):
+        links_set= {}
+        for p in net.pops:
+                for router in p.routers:
+                                for dn in router.direct_neighbors:
+                                        if router.name+"-"+dn not in links_set:
+                                                f.write("\tadd_link "+router.name+" "+dn+"\n")
+                                                links_set[router.name+"-"+dn] = True
+                                                links_set[dn+"-"+router.name] = True
+                                for b in router.bridge_nodes:
+                                        f.write("\tbridge_node "+router.name+" eth"+str(b["eth"])+" "+b["interface"]+"\n")
+                
                 
 
 class Interface:
@@ -115,6 +138,7 @@ class Router:
                 self.ibgp_neighbors = []        
                 self.interfaces = []
                 self.direct_neighbors = {} # list of routers the router is directly connected to
+                self.bridge_nodes = []
 
 
         def set_router_id(self, id):
@@ -220,6 +244,12 @@ class Network:
                 self.data = data
                 self.init_router_id = ip_address("255.251.0.1")
                 self.init_routerbgp_id = ip_address("20.20.0.1")
+                self.eth = 1
+
+        def generate_next_eth(self):
+                res = self.eth
+                self.eth += 1
+                return res
 
         def add_pop(self, pop):
                 self.pops.append(pop)
@@ -329,7 +359,6 @@ class Network:
 
         def add_core_routers(self):
                 for p in self.pops:
-                        #add two core routers to each POP
                         p.add_core_routers()
         
         def connect_pops(self):
@@ -365,6 +394,10 @@ class Network:
                                 router.add_interface(description="eBGP Link to "+extern_as,
                                                      ip=if_ip,
                                                      name=info[5])
+
+                                # add this info for creating the bridge_nodes
+                                router.bridge_nodes.append({"interface" : info[5],
+                                                            "eth" : self.generate_next_eth()})
                         
                         elif info[0] == "INT":
                                 if info[1] == "odd-even":
