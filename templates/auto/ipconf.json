@@ -2,6 +2,7 @@
     "name" : "GROUP 5 ISP Network",
     "GROUP5" : "fde4:5:",
     "AS" : 65005,
+    "INTERPOPNET" : "B",
     "locations" : [
 	"BR",
 	"AT",
@@ -12,24 +13,26 @@
 	"LG",
 	"LU",
 	"NA",
-	"WB",
-	"P2P-INTER-POP"
+	"WB"
     ],
     "types" : {
-	    "p2p" : "1",
-	    "lo" : "2"
+	"p2p" : "1",
+	"lo" : "2",
+	"home" : "3",
+	"enterprise" : "4"	
     },
     "bgp_neighbor_if_ip" : {
+	"64512" : "fde4::5:beef/64",
         "65001" : "fde4::5:dead/64",
         "65006" : "fde4::5:deaf/64",
         "65004" : "fde4::5:babe/64",
         "65007" : "fde4::5:face/64"
     },
     "prefixes" : {
-	    "p2p" : "/127",
-	    "bgp" : "/64",
-	    "lo" : "/128",
-	    "default" : "/64"
+	"p2p" : "/127",
+	"bgp" : "/64",
+	"lo" : "/128",
+	"default" : "/64"
     },
     "bgp_types" : {
         "SC" : 0,
