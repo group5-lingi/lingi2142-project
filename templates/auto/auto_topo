@@ -1,4 +1,4 @@
-pops 2
+pops 10
 # the core POP has 2 extra routers that are
 # route reflectors
 core BR

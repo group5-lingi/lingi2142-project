@@ -186,13 +186,13 @@ class Router:
         
 
 class POP:
-        def __init__(self, network, location, name="POP-", type="limb"):
+        def __init__(self, network, location_number, name="POP-", type="limb"):
                 self.routers = []
                 self.network = network
                 self.type = type
-                self.name = name + str(location) + "-"+type
-                self.location = IP_CONF["locations"][location] # str
-                self.location_name = location
+                self.name = name + str(location_number) + "-"+type
+                self.location = str(location_number) # str
+                self.location_name = IP_CONF["locations"][locationNumber] # str
 
         def add_router(self, router):
                 self.routers.append(router)
@@ -263,18 +263,16 @@ class Network:
 
         def create_pops(self):
                 """ Creates our points of presence"""
-                i = 0
-                for location in self.config['locations']:
-                        if i == self.data['pops'] or location == "P2P-INTER-POP":
+                for i, in range(len(self.config['locations'])):
+                         if i == self.data['pops'] or location == "P2P-INTER-POP":
                                 break
                         else:
-                                pop = POP(self, location)
+                                pop = POP(self, i)
                                 pop.add_core_routers()
                                 if pop.location_name in self.data['core']:
                                         pop.update_type("core")
                                         self.setup_core_pop(pop)
                                 self.add_pop(pop)
-                                i += 1
 
 
         def setup_core_pop(self, pop):
@@ -462,7 +460,8 @@ if __name__ == "__main__":
                 print("Bad usage. Help : ./create.py auto_topo")
                 sys.exit(1)
         with open('ipconf.json') as ip_file:        
-                IP_CONF = json.load(ip_file)      
+                IP_CONF = json.load(ip_file)
+                pprint(IP_CONF)
                 ip_file.close()
         create_from_file(sys.argv[1])
 

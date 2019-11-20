@@ -2,19 +2,19 @@
     "name" : "GROUP 5 ISP Network",
     "GROUP5" : "fde4:5:",
     "AS" : 65005,
-    "locations" : {
-	    "BR" : "1",
-	    "AT" : "2",
-	    "EF" : "3",
-	    "FB" : "4",
-	    "LI" : "5",
-	    "WF" : "6",
-	    "LG" : "7",
-	    "LU" : "8",
-	    "NA" : "9",
-	    "WB" : "A",
-	    "P2P-INTER-POP" : "B" 
-    },
+    "locations" : [
+	"BR",
+	"AT",
+	"EF",
+	"FB",
+	"LI",
+	"WF",
+	"LG",
+	"LU",
+	"NA",
+	"WB",
+	"P2P-INTER-POP"
+    ],
     "types" : {
 	    "p2p" : "1",
 	    "lo" : "2"
