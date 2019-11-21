@@ -49,6 +49,8 @@ def create_network(data):
     net.create_pops()
     net.connect_pops()
     net.setup_bgp()
+    net.create_customers()
+    net.connect_customers()
     json.dump(net.export(), sys.stdout, indent=4)
     return net
 
@@ -87,15 +89,17 @@ def add_links(f, net):
 
 
 class Customer:
-    def __init__(self, pop, interface, type="home"):
+    def __init__(self, pop, interface, subnet, type="home"):
         self.interface = interface # interface the customer is connected on
         self.pop = pop
         self.type = type
-        self.subnet = self.pop.network.generate_next_customer_subnet()
+        self.subnet = subnet
 
     def export(self):
         d = vars(self)
         d.pop('pop')
+        d['interface'] = self.interface.export()
+        return d
 
         
 
@@ -158,13 +162,14 @@ class Router:
         self.type = type                                       # router
         self.name = name+"-"+pop.location
         self.passwd = passwd
+        self.customers = []
         if hostname == None:
             self.hostname = self.name
         else:
             self.hostname = hostname
         self.router_id = router_id
         self.routerbgp_id = routerbgp_id
-        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"::") + len(pop.routers)+1
+        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"00::") + len(pop.routers)+1
         self.lo_ip = str(self.lo_ip) + self.pop.network.config["prefixes"]["lo"]
         self.as_num = IP_CONF["AS"]
         self.ebgp_neighbors = []
@@ -180,6 +185,8 @@ class Router:
     def set_routerbgp_id(self, id):
         self.routerbgp_id = id
 
+    def add_customer(self, customer):
+        self.customers.append(customer)
     def set_lo_ip(self, ip):  
         self.lo_ip = ip_address(ip)
 
@@ -212,14 +219,15 @@ class Router:
         d['direct_neighbors'] = [r for r in self.direct_neighbors.keys()]
         d['pop_name'] = self.pop.location
         d['ebgp_neighbors'] = [n.export() for n in self.ebgp_neighbors]
-        d['ibgp_neighbors'] = [n.export() for n in self.ibgp_neighbors]                
+        d['ibgp_neighbors'] = [n.export() for n in self.ibgp_neighbors]
+        d['customers'] = [c.export() for c in self.customers]
         d.pop('pop')        
         return d
 
         
-
+        
 class POP:
-    def __init__(self, network, location, name="POP-", type="limb"):
+    def __init__(self, network, location, name="POP-", type="limb", subnet=None):
         self.routers = []
         self.network = network
         self.type = type
@@ -227,6 +235,9 @@ class POP:
         self.location = location
         self.location_number = self.network.config['locations'].index(self.location) + 1
         self.total_p2p = 1
+        self.subnet = subnet
+
+        
 
     def add_router(self, router):
                 
@@ -269,17 +280,46 @@ class Network:
         data : parsed auto_topo file
         config : dict of ipconf.json
         """
-        self.config = config
+        self.config = config        
         self.name = config['name']
         self.pops = []
+        self.customers = []
         self.total_routers = 0
         self.total_inter_pop_links = 1
         self.data = data
+        self.total_home_customers = 0
+        self.total_enterprise_customers = 0
         self.init_router_id = ip_address("59.59.59.1")
         self.init_routerbgp_id = ip_address("20.20.0.1")
-        self.init_customer_subnet = ip_address("fde4:5:"+self.config
         self.eth = 1
 
+
+
+    def generate_next_home_customer_id(self):
+        cust_id = format(self.total_home_customers, '04x');
+        self.total_home_customers += 1
+        return cust_id
+
+    def generate_next_enterprise_customer_id(self):
+        cust_id = format(self.total_enterprise_customers, '03x')
+        self.total_enterprise_customers += 1
+        return cust_id
+
+
+    def generate_next_customer_subnet(self, type, pop): # type = home || enterprise
+        subnet = self.config['GROUP5']+ self.config['types'][type]
+        if type == "home":
+            subnet += str(pop.location_number) # only have a location associated with home users
+            cust_id = self.generate_next_home_customer_id()
+            subnet += cust_id[0:2]+":"+cust_id[2:] + "::"+ self.config['prefixes'][type]
+        
+        elif type == "enterprise" :
+            subnet += self.generate_next_enterprise_customer_id()+"::"+self.config['prefixes'][type]
+
+        return subnet
+            
+
+        
     def generate_next_eth(self):
         res = self.eth
         self.eth += 1
@@ -294,6 +334,24 @@ class Network:
                 return pop
         return None
 
+
+    def add_customer(self, customer):
+        self.customers.append(customer)
+
+    def create_customers(self):
+        for i in range(len(self.data['cust'])):
+            cust_info = self.data['cust'][i]
+            customer = POP(self, cust_info[0], name="CUST", type=cust_info[1], subnet=self.generate_next_customer_subnet(cust_info[1], self.get_pop(cust_info[0])))
+            self.setup_customer(customer)
+            self.add_customer(customer)
+
+    """ 
+    Gives the customer 1 router with an interface
+    """
+    def setup_customer(self, customer):
+        r1 = Router(customer, "CUST1-", "60.60.60.1", "60.60.61.1")
+        customer.add_router(r1)
+        self.link_routers(r1, self.get_pop(customer.location).routers[0])
 
     def create_pops(self):
         """ Creates our points of presence"""
@@ -335,15 +393,14 @@ class Network:
 
     # adds the interfaces the two routers will use to communicate
     def link_routers(self,r1, r2):
-        if r1.name in r2.direct_neighbors or r1.name == r2.name or r1 == r2:
-            return
 
-                
+        if r1.name in r2.direct_neighbors or r1.name == r2.name or r1 == r2:
+            return                
         subnet = self.config["GROUP5"] + self.config["types"]["p2p"]
         
         if r1.pop.location != r2.pop.location:
             # for connections between routers in different pops
-            subnet +=  self.config['INTERPOPNET']
+            subnet +=  self.config['INTERPOPNET']+"00"
             subnet += "::"
 
             r1_if = Interface(r1, description="Link to "+r2.name)
@@ -357,27 +414,24 @@ class Network:
 
 
         else :
-                  
-            subnet += str(r1.pop.location_number)
+            # same pop routers
+            subnet += str(r1.pop.location_number)+"00"
             subnet += "::"
             r1_if = Interface(r1, description="Link to "+r2.name)
-            r1_if.ip = str(ip_address(subnet) + ( 16 * r1.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
+            r1_if.ip = str(ip_address(subnet) + ( 16 * r2.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
             r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + ( 16 * r1.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
+            r2_if.ip = str(ip_address(subnet) + ( 16 * r2.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
  
 
             r1.pop.total_p2p += 1
-
+                
 
         r1.direct_neighbors[r2.name] = r2
         r2.direct_neighbors[r1.name] = r1
-                
-
-
             
     def generate_next_router_id(self):
         id = str(self.init_router_id + 1)
@@ -411,10 +465,9 @@ class Network:
     def connect_router_to_network(self, router):
         for p in [pop for pop in self.pops if pop.name != router.pop.name]:
             for r in p.routers:
-                if r.color == router.color and r.name not in router.direct_neighbors and "RR" not in r.type:
+                if r.color == router.color and r.name not in router.direct_neighbors and "RR" not in r.type and r.pop.location == self.data['core'][0]:
                     self.link_routers(router, r)
                                   
-
     def setup_bgp(self):
         """ setups up bgp based on the config : auto_topo"""
         for info in self.data['bgp']:
@@ -469,7 +522,15 @@ class Network:
         return routers
 
 
-
+    def connect_customers(self):
+        for customer in self.customers:
+            pop = self.get_pop(customer.location)
+            type = customer.type
+            cust = Customer(pop, customer.routers[0].interfaces[0], customer.subnet, type)
+            pop.routers[0].add_customer(cust)
+                                                                     
+            
+    
     def create_ibgp_session(self, r1, r2):
         r1_neighbor = BGPNeighbor(r2.lo_ip.split("/")[0], r2.as_num, "IBGP")
         r2_neighbor = BGPNeighbor(r1.lo_ip.split("/")[0], r1.as_num, "IBGP")
@@ -490,7 +551,8 @@ class Network:
     def export(self):
         return {
             "name" : self.name,
-            "pops" : [p.export() for p in self.pops]
+            "pops" : [p.export() for p in self.pops],
+            "customers" : [c.export() for c in self.customers]
         }
               
 
