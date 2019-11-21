@@ -47,7 +47,6 @@ def create_network(data):
     total_routers = 0
     i = 0
     net.create_pops()
-    pprint(net.pops)
     net.connect_pops()
     net.setup_bgp()
     json.dump(net.export(), sys.stdout, indent=4)
@@ -69,8 +68,13 @@ def add_links(f, net):
                     f.write("\tadd_link "+router.name+" "+dn+"\n")
                     links_set[router.name+"-"+dn] = True
                     links_set[dn+"-"+router.name] = True
-                    for b in router.bridge_nodes:
-                        f.write("\tbridge_node "+router.name+" eth"+str(b["eth"])+" "+b["interface"]+"\n")
+                    # for b in router.bridge_nodes:
+                    #     f.write("\tbridge_node "+router.name+" eth"+str(b["eth"])+" "+b["interface"]+"\n")
+
+    for p in net.pops:
+        for router in p.routers:
+            for b in router.bridge_nodes:
+                f.write("\tbridge_node "+router.name+" eth"+str(b["eth"])+" "+b["interface"]+"\n")
                                   
                 
 
@@ -207,7 +211,7 @@ class POP:
         self.type = type
         self.name = name+"-"+type
         self.location = location
-        self.location_number = self.network.config['locations'].index(self.location)
+        self.location_number = self.network.config['locations'].index(self.location) + 1
 
     def add_router(self, router):
         self.routers.append(router)
@@ -334,7 +338,7 @@ class Network:
 
         else :
                   
-            subnet += str(self.config["locations"].index(r1.pop.location))
+            subnet += str(r1.pop.location_number)
             subnet += "::"
             r1_if = Interface(r1, description="Link to "+r2.name)
             r1_if.ip = str(ip_address(subnet) + len(r1.interfaces) + len(r2.interfaces) + 1) + self.config["prefixes"]["p2p"]
@@ -346,8 +350,8 @@ class Network:
             r2.interfaces.append(r2_if)
 
 
-            r1.direct_neighbors[r2.name] = r2
-            r2.direct_neighbors[r1.name] = r1
+        r1.direct_neighbors[r2.name] = r2
+        r2.direct_neighbors[r1.name] = r1
                 
 
 
