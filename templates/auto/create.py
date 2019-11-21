@@ -150,8 +150,8 @@ class Router:
             self.hostname = hostname
         self.router_id = router_id
         self.routerbgp_id = routerbgp_id
-        self.lo_ip = ip_address(IP_CONF["GROUP5"]+IP_CONF["types"]["lo"]+str(self.pop.location_number)+"::") + len(pop.routers)+1
-        self.lo_ip = str(self.lo_ip) + IP_CONF["prefixes"]["lo"]
+        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"::") + len(pop.routers)+1
+        self.lo_ip = str(self.lo_ip) + self.pop.network.config["prefixes"]["lo"]
         self.as_num = IP_CONF["AS"]
         self.ebgp_neighbors = []
         self.ibgp_neighbors = []        
@@ -215,6 +215,7 @@ class POP:
         self.total_p2p = 1
 
     def add_router(self, router):
+                
         self.routers.append(router)
 
 
@@ -223,7 +224,7 @@ class POP:
                     self.network.generate_next_router_id(),
                     self.network.generate_next_routerbgp_id())
         self.add_router(r1)
-          
+
         r2 = Router(self, self.network.generate_next_hostname(),
                     self.network.generate_next_router_id(),
                     self.network.generate_next_routerbgp_id())
@@ -349,6 +350,7 @@ class Network:
             r2_if = Interface(r2, description="Link to "+r1.name)
             r2_if.ip = str(ip_address(subnet) + ( 16 * r1.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
+ 
 
             r1.pop.total_p2p += 1
 
