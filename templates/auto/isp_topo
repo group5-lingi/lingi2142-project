@@ -15,15 +15,12 @@ function mk_topo {
 	add_link P1-BR P2-BR
 	add_link P1-BR P3-BR
 	add_link P1-BR P4-BR
-	add_link P1-BR P5-AT
 	add_link P2-BR P3-BR
 	add_link P2-BR P4-BR
-	add_link P2-BR P6-AT
 	add_link P3-BR P4-BR
-	add_link P5-AT P6-AT
 	bridge_node P1-BR eth1 styx
-	bridge_node P5-AT eth2 lethe
-	bridge_node P5-AT eth3 rubicon
-	bridge_node P5-AT eth4 celadon
-	bridge_node P5-AT eth5 kerlaugar
+	bridge_node P1-BR eth2 lethe
+	bridge_node P1-BR eth3 rubicon
+	bridge_node P1-BR eth4 celadon
+	bridge_node P1-BR eth5 kerlaugar
 }

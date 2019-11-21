@@ -6,7 +6,7 @@ service advanced-vty
 !
 debug ospf6 neighbor state
 !
-%for interface in data['interfaces']:
+%for interface in [ d for d in data['interfaces'] if d['type'] != "e" ]:
 interface ${interface['name']}
     ipv6 ospf6 cost ${interface['cost']}
     %if interface['active']:
@@ -26,7 +26,7 @@ interface lo
 !
 router ospf6
     ospf6 router-id ${data['router_id']}
-    %for nic in data['interfaces']:
+    %for nic in [ d for d in data['interfaces'] if d['type'] != "e"]:
     interface ${nic['name']} area ${nic['area']}
     %endfor
     interface lo area 0.0.0.0

@@ -12,6 +12,9 @@ router bgp ${data["as_num"]}
   %for neighbor in data["ibgp_neighbors"]:
  neighbor ${neighbor["ip"]} remote-as ${neighbor["as_num"]}
  neighbor ${neighbor["ip"]} update-source lo
+ %if "RR" in data["type"]:
+ neighbor ${neighbor["ip"]} route-reflector-client
+ %endif
   %endfor  
   !
   address-family ipv6 unicast

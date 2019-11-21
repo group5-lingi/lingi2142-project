@@ -88,7 +88,7 @@ def add_links(f, net):
 
 
 class Interface:
-    def __init__(self, router, description="Link", ip=None, name=None):
+    def __init__(self, router, description="Link", ip=None, name=None, type=None):
         if name == None:
             self.name = router.name+"-eth"+str(len(router.interfaces))
         else:
@@ -100,6 +100,7 @@ class Interface:
         self.area = "0.0.0.0"
         self.active = True
         self.ip = ip
+        self.type= type
                   
         if description ==None:
             self.description = "link"
@@ -172,8 +173,8 @@ class Router:
     def set_as_num(self, num):
         self.as_num = num
 
-    def add_interface(self, name=None, ip=None, description=None):
-        new_if = Interface(self, description=description, ip=ip, name=name)
+    def add_interface(self, name=None, ip=None, description=None, type=None):
+        new_if = Interface(self, description=description, ip=ip, name=name, type=type)
         self.interfaces.append(new_if)
 
         return new_if
@@ -261,7 +262,7 @@ class Network:
         self.total_routers = 0
         self.total_inter_pop_links = 1
         self.data = data
-        self.init_router_id = ip_address("255.251.0.1")
+        self.init_router_id = ip_address("59.59.59.1")
         self.init_routerbgp_id = ip_address("20.20.0.1")
         self.eth = 1
 
@@ -304,15 +305,18 @@ class Network:
                      self.generate_next_router_id(),
                      self.generate_next_routerbgp_id(), type=["P", "RR"], color=1)
         pop.add_router(rr2)
-
         #connect route reflectors to every other router in our core POP
         for r in pop.routers:
-            self.link_routers(rr1, r)
-            self.link_routers(rr2, r)
+            if r.name != rr1.name and r.name != rr2.name:
+                self.link_routers(rr1, r)
+                self.link_routers(rr2, r)
 
         # link the two together
         self.link_routers(rr1, rr2)
+        
 
+        # create ibgp session between them
+        self.create_ibgp_session(rr1, rr2)
   
 
     # adds the interfaces the two routers will use to communicate
@@ -410,8 +414,8 @@ class Network:
                 
                 if_ip = self.config["bgp_neighbor_if_ip"][extern_as]
                 interface = router.add_interface(description="eBGP Link to "+extern_as,
-                                     ip=if_ip,
-                                     name=info[5])
+                                                 ip=if_ip,
+                                                 name=info[5], type="e")
                 
                 router.add_bgp_neighbor(BGPNeighbor(info[3].split("/")[0], info[4], info[1], interface=interface),
                                         type="e")
