@@ -86,6 +86,19 @@ def add_links(f, net):
 ## rename ebgp neighbors
 
 
+class Customer:
+    def __init__(self, pop, interface, type="home"):
+        self.interface = interface # interface the customer is connected on
+        self.pop = pop
+        self.type = type
+        self.subnet = self.pop.network.generate_next_customer_subnet()
+
+    def export(self):
+        d = vars(self)
+        d.pop('pop')
+
+        
+
 
 class Interface:
     def __init__(self, router, description="Link", ip=None, name=None, type=None):
@@ -264,6 +277,7 @@ class Network:
         self.data = data
         self.init_router_id = ip_address("59.59.59.1")
         self.init_routerbgp_id = ip_address("20.20.0.1")
+        self.init_customer_subnet = ip_address("fde4:5:"+self.config
         self.eth = 1
 
     def generate_next_eth(self):

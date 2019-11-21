@@ -32,7 +32,9 @@
 	"p2p" : "/127",
 	"bgp" : "/64",
 	"lo" : "/128",
-	"default" : "/64"
+	"default" : "/64",
+	"home" : "/56",
+	"enterprise" : "/48"
     },
     "bgp_types" : {
 	"SC" : 0,
