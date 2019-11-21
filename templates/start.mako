@@ -21,5 +21,8 @@ LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/${data['name'].lower(
 # launching FRRouting BGP daemon
 LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/${data['name'].lower()}_bgp.conf -z /tmp/${data['name'].lower()}.api -i /tmp/${data['name'].lower()}_bgp.pid -A 127.0.0.1 &
 
+# Setting up the firewall
+/etc/${data['name'].lower() + "_firewall.sh"}
+
 # Export vtysh
 export LD_LIBRARY_PATH=/usr/local/lib
