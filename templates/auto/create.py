@@ -212,6 +212,7 @@ class POP:
         self.name = name+"-"+type
         self.location = location
         self.location_number = self.network.config['locations'].index(self.location) + 1
+        self.total_p2p = 1
 
     def add_router(self, router):
         self.routers.append(router)
@@ -320,34 +321,36 @@ class Network:
 
                 
         subnet = self.config["GROUP5"] + self.config["types"]["p2p"]
-                
+        
         if r1.pop.location != r2.pop.location:
             # for connections between routers in different pops
             subnet +=  self.config['INTERPOPNET']
             subnet += "::"
 
             r1_if = Interface(r1, description="Link to "+r2.name)
-            r1_if.ip = str(ip_address(subnet) + self.total_inter_pop_links) + self.config["prefixes"]["p2p"]
+            r1_if.ip = str(ip_address(subnet) + (16 * self.total_inter_pop_links)) + self.config["prefixes"]["p2p"]
             r1.interfaces.append(r1_if)
-            self.total_inter_pop_links += 1
                         
             r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + self.total_inter_pop_links) + self.config["prefixes"]["p2p"]
+            r2_if.ip = str(ip_address(subnet) + (16 * self.total_inter_pop_links) + 1) + self.config["prefixes"]["p2p"]
             r2.interfaces.append(r2_if)
             self.total_inter_pop_links += 1
+
 
         else :
                   
             subnet += str(r1.pop.location_number)
             subnet += "::"
             r1_if = Interface(r1, description="Link to "+r2.name)
-            r1_if.ip = str(ip_address(subnet) + len(r1.interfaces) + len(r2.interfaces) + 1) + self.config["prefixes"]["p2p"]
+            r1_if.ip = str(ip_address(subnet) + ( 16 * r1.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
             r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + len(r1.interfaces) + len(r2.interfaces) + 1) + self.config["prefixes"]["p2p"]            
+            r2_if.ip = str(ip_address(subnet) + ( 16 * r1.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
+
+            r1.pop.total_p2p += 1
 
 
         r1.direct_neighbors[r2.name] = r2
@@ -390,7 +393,6 @@ class Network:
             for r in p.routers:
                 if r.color == router.color and r.name not in router.direct_neighbors and "RR" not in r.type:
                     self.link_routers(router, r)
-                    self.total_inter_pop_links += 2
                                   
 
     def setup_bgp(self):
