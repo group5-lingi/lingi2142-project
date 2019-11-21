@@ -1,4 +1,4 @@
-pops 1
+pops 3
 # the core POP has 2 extra routers that are
 # route reflectors
 core BR
@@ -10,7 +10,6 @@ bgp EXT CB BR fde4::7:face/64 65007 kerlaugar
 # the following connects the routers to the
 # two route reflectors in our core POP (BR)
 bgp INT odd-even
-
 # customer stuff
-cust BR h
-cust BR e
+cust BR home
+cust AT enterprise
