@@ -11,5 +11,5 @@ bgp EXT C BR fde4::4:beef/64 65004 celadon
 # two route reflectors in our core POP (BR)
 bgp INT odd-even
 # customer stuff
-# cust BR home
-# cust AT enterprise
+cust BR home
+# cust AT enterprise 65051

@@ -170,7 +170,8 @@ class Router:
             self.hostname = hostname
         self.router_id = router_id
         self.routerbgp_id = routerbgp_id
-        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"00::") + len(pop.routers)+1
+        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"00::") #+ len(pop.routers) + 1
+        self.lo_ip = str(self.lo_ip) + format(len(pop.routers) + 1, '04x')
         self.lo_ip = str(self.lo_ip) + self.pop.network.config["prefixes"]["lo"]
         self.as_num = IP_CONF["AS"]
         self.ebgp_neighbors = []
@@ -362,6 +363,7 @@ class Network:
                 break
             pop = POP(self, location)
             pop.add_core_routers()
+            ## add ibgp session
             if 'core' in self.data and pop.location in self.data['core']:
                 pop.update_type("core")
                 self.setup_core_pop(pop)
@@ -389,7 +391,7 @@ class Network:
         
 
         # create ibgp session between them
-        self.create_ibgp_session(rr1, rr2)
+        #self.create_ibgp_session(rr1, rr2)
   
 
     # adds the interfaces the two routers will use to communicate
@@ -405,11 +407,11 @@ class Network:
             subnet += "::"
 
             r1_if = Interface(r1, description="Link to "+r2.name, type="i")
-            r1_if.ip = str(ip_address(subnet) + (4096 * self.total_inter_pop_links)) + self.config["prefixes"]["p2p"]
+            r1_if.ip = str(ip_address(subnet)) + format(self.total_inter_pop_link, '03x')+ "0" + self.config["prefixes"]["p2p"]
             r1.interfaces.append(r1_if)
                         
-            r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + (4096 * self.total_inter_pop_links) + 1) + self.config["prefixes"]["p2p"]
+            r2_if = Interface(r2, description="Link to "+r1.name, type="i")
+            r2_if.ip = str(ip_address(subnet)) + format(self.total_inter_pop_links, '03x')+"1" + self.config["prefixes"]["p2p"]
             r2.interfaces.append(r2_if)
             self.total_inter_pop_links += 1
 
@@ -419,12 +421,12 @@ class Network:
             subnet += str(r1.pop.location_number)+"00"
             subnet += "::"
             r1_if = Interface(r1, description="Link to "+r2.name, type="i")
-            r1_if.ip = str(ip_address(subnet) + ( 4096 * r2.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
+            r1_if.ip = str(ip_address(subnet)) + format( r2.pop.total_p2p, '03x')+"0"  + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
-            r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + ( 4096 * r2.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
+            r2_if = Interface(r2, description="Link to "+r1.name, type="i")
+            r2_if.ip = str(ip_address(subnet)) + format(r2.pop.total_p2p, '03x')+ "1" + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
  
 
@@ -494,7 +496,7 @@ class Network:
 
                 # add this info for creating the bridge_nodes
                 router.bridge_nodes.append({"interface" : info[5],
-                                                            "eth" : self.generate_next_eth()})
+                                            "eth" : self.generate_next_eth()})
                 
             elif info[0] == "INT":
                 if info[1] == "odd-even":
@@ -541,7 +543,12 @@ class Network:
 
         if r1.name == r2.name or r1 == r2:
             return
+
+        for n in r1.ibgp_neighbors:
+            if n.ip  == r2.lo_ip :
+                return
         else:
+            print("IBGP "+r1.name+" "+r2.name)
             r1.add_bgp_neighbor(r1_neighbor, type="i")
             r2.add_bgp_neighbor(r2_neighbor, type="i")
                   
@@ -549,7 +556,7 @@ class Network:
     def setup_ibgp_same_color(self,  rr):
         routers = self.get_all_routers()
         for r in routers:
-            if r.color == rr.color:
+            if r.name != rr.name:
                 self.create_ibgp_session(r, rr)
 
     def export(self):
