@@ -49,8 +49,9 @@ def create_network(data):
     net.create_pops()
     net.connect_pops()
     net.setup_bgp()
-    net.create_customers()
-    net.connect_customers()
+    if 'cust' in net.data:
+        net.create_customers()
+        net.connect_customers()
     json.dump(net.export(), sys.stdout, indent=4)
     return net
 
@@ -361,7 +362,7 @@ class Network:
                 break
             pop = POP(self, location)
             pop.add_core_routers()
-            if pop.location in self.data['core']:
+            if 'core' in self.data and pop.location in self.data['core']:
                 pop.update_type("core")
                 self.setup_core_pop(pop)
             self.add_pop(pop)
@@ -403,12 +404,12 @@ class Network:
             subnet +=  self.config['INTERPOPNET']+"00"
             subnet += "::"
 
-            r1_if = Interface(r1, description="Link to "+r2.name)
-            r1_if.ip = str(ip_address(subnet) + (16 * self.total_inter_pop_links)) + self.config["prefixes"]["p2p"]
+            r1_if = Interface(r1, description="Link to "+r2.name, type="i")
+            r1_if.ip = str(ip_address(subnet) + (4096 * self.total_inter_pop_links)) + self.config["prefixes"]["p2p"]
             r1.interfaces.append(r1_if)
                         
             r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + (16 * self.total_inter_pop_links) + 1) + self.config["prefixes"]["p2p"]
+            r2_if.ip = str(ip_address(subnet) + (4096 * self.total_inter_pop_links) + 1) + self.config["prefixes"]["p2p"]
             r2.interfaces.append(r2_if)
             self.total_inter_pop_links += 1
 
@@ -417,22 +418,25 @@ class Network:
             # same pop routers
             subnet += str(r1.pop.location_number)+"00"
             subnet += "::"
-            r1_if = Interface(r1, description="Link to "+r2.name)
-            r1_if.ip = str(ip_address(subnet) + ( 16 * r2.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
+            r1_if = Interface(r1, description="Link to "+r2.name, type="i")
+            r1_if.ip = str(ip_address(subnet) + ( 4096 * r2.pop.total_p2p) ) + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
             r2_if = Interface(r2, description="Link to "+r1.name)
-            r2_if.ip = str(ip_address(subnet) + ( 16 * r2.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
+            r2_if.ip = str(ip_address(subnet) + ( 4096 * r2.pop.total_p2p) + 1) + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
  
 
             r1.pop.total_p2p += 1
-                
+        
 
         r1.direct_neighbors[r2.name] = r2
         r2.direct_neighbors[r1.name] = r1
-            
+        
+        #print(r1.name+" to "+r2.name+" : "+r1_if.ip)
+        #print(r2.name+" to "+r1.name+" : "+r2_if.ip)
+
     def generate_next_router_id(self):
         id = str(self.init_router_id + 1)
         self.init_router_id += 1

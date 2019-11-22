@@ -2,6 +2,8 @@
 
 import sys
 import json
+import os
+import stat
 from mako.template import Template
 from argparse import FileType, ArgumentParser
 from pprint import pprint
@@ -19,6 +21,8 @@ def setup_self():
             for router in pop["routers"]:
                 with open("../isp/" + router['name'] + "_start", 'w') as f:
                     f.write(template.render(data=router))
+                    st = os.stat(f.name)
+                    os.chmod(f.name, st.st_mode | stat.S_IEXEC)
                         
 
             print("Creating boot scripts")
@@ -26,7 +30,8 @@ def setup_self():
             for router in pop["routers"]:
                 with open("../isp/" + router['name'] + "_boot", "w") as f:
                     f.write(template.render(data=router))
-                        
+                    st = os.stat(f.name)
+                    os.chmod(f.name, st.st_mode | stat.S_IEXEC)                        
                 
 
             print("Creating ld.so.conf")
@@ -40,6 +45,9 @@ def setup_self():
             for router in pop["routers"]:
                 with open("../isp/" + router['name'] + "/" + router['name'].lower() + "_firewall.sh", "w") as f:
                     f.write(template.render(data=router))
+                    st = os.stat(f.name)
+                    os.chmod(f.name, st.st_mode | stat.S_IEXEC)
+
 
             print("Creating OSPF config")
             template = Template(filename="ospf6d.mako")

@@ -1,10 +1,34 @@
 {
-    "name": "GROUP 5 ISP Network",
     "pops": [
         {
+            "type": "core",
+            "router_names": [
+                "P1-BR",
+                "P2-BR",
+                "P3-BR",
+                "P4-BR"
+            ],
             "routers": [
                 {
+                    "passwd": "zebra",
+                    "direct_neighbors": [
+                        "P2-BR",
+                        "P3-BR",
+                        "P4-BR"
+                    ],
+                    "as_num": 65005,
+                    "ibgp_neighbors": [
+                        {
+                            "as_num": 65005,
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::3"
+                        }
+                    ],
                     "hostname": "P1-BR",
+                    "color": 0,
+                    "customers": [],
+                    "router_id": "59.59.59.2",
+                    "pop_name": "BR",
                     "bridge_nodes": [
                         {
                             "interface": "styx",
@@ -15,683 +39,362 @@
                             "eth": 2
                         },
                         {
-                            "interface": "rubicon",
-                            "eth": 3
-                        },
-                        {
                             "interface": "celadon",
-                            "eth": 4
-                        },
-                        {
-                            "interface": "kerlaugar",
-                            "eth": 5
+                            "eth": 3
                         }
                     ],
-                    "pop_name": "BR",
                     "lo_ip": "fde4:5:2100::1/128",
-                    "name": "P1-BR",
-                    "direct_neighbors": [
-                        "P4-BR",
-                        "P3-BR",
-                        "P2-BR",
-                        "CUST1--BR",
-                        "P5-AT"
-                    ],
-                    "passwd": "zebra",
-                    "router_id": "59.59.59.2",
-                    "as_num": 65005,
-                    "interfaces": [
+                    "ebgp_neighbors": [
                         {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::10/127",
-                            "description": "Link to P2-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P1-BR-eth0",
-                            "type": null,
-                            "dead_time": 40
+                            "interface": {
+                                "ip": "fde4::5:cafe/64",
+                                "description": "eBGP Link to 64512",
+                                "type": "e",
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "cost": 5,
+                                "active": true,
+                                "hello_time": 10,
+                                "name": "styx",
+                                "dead_time": 40
+                            },
+                            "as_num": "64512",
+                            "type": "P",
+                            "ip": "fde4::1"
                         },
                         {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::21/127",
-                            "description": "Link to P3-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P1-BR-eth1",
-                            "type": null,
-                            "dead_time": 40
+                            "interface": {
+                                "ip": "fde4::5:dead/64",
+                                "description": "eBGP Link to 65001",
+                                "type": "e",
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "cost": 5,
+                                "active": true,
+                                "hello_time": 10,
+                                "name": "lethe",
+                                "dead_time": 40
+                            },
+                            "as_num": "65001",
+                            "type": "SC",
+                            "ip": "fde4::1:dead"
                         },
                         {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::31/127",
-                            "description": "Link to P4-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P1-BR-eth2",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1b00::11/127",
-                            "description": "Link to P5-AT",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P1-BR-eth3",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4::5:cafe/64",
-                            "description": "eBGP Link to 64512",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "styx",
-                            "type": "e",
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4::5:dead/64",
-                            "description": "eBGP Link to 65001",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "lethe",
-                            "type": "e",
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4::5:deaf/64",
-                            "description": "eBGP Link to 65006",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "rubicon",
-                            "type": "e",
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4::5:babe/64",
-                            "description": "eBGP Link to 65004",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "celadon",
-                            "type": "e",
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4::5:face/64",
-                            "description": "eBGP Link to 65007",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "kerlaugar",
-                            "type": "e",
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::71/127",
-                            "description": "Link to CUST1--BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P1-BR-eth9",
-                            "type": null,
-                            "dead_time": 40
+                            "interface": {
+                                "ip": "fde4::5:babe/64",
+                                "description": "eBGP Link to 65004",
+                                "type": "e",
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "cost": 5,
+                                "active": true,
+                                "hello_time": 10,
+                                "name": "celadon",
+                                "dead_time": 40
+                            },
+                            "as_num": "65004",
+                            "type": "C",
+                            "ip": "fde4::4:beef"
                         }
                     ],
-                    "ibgp_neighbors": [
-                        {
-                            "ip": "fde4:5:2100::3",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        }
-                    ],
+                    "routerbgp_id": "20.20.0.2",
                     "type": [
                         "P"
                     ],
-                    "routerbgp_id": "20.20.0.2",
-                    "ebgp_neighbors": [
+                    "name": "P1-BR",
+                    "interfaces": [
                         {
-                            "ip": "fde4::1",
-                            "as_num": "64512",
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4::5:cafe/64",
-                                "description": "eBGP Link to 64512",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "styx",
-                                "type": "e",
-                                "dead_time": 40
-                            },
-                            "type": "P"
+                            "ip": "fde4:5:1100::1000/127",
+                            "description": "Link to P2-BR",
+                            "type": "i",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P1-BR-eth0",
+                            "dead_time": 40
                         },
                         {
-                            "ip": "fde4::1:dead",
-                            "as_num": "65001",
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4::5:dead/64",
-                                "description": "eBGP Link to 65001",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "lethe",
-                                "type": "e",
-                                "dead_time": 40
-                            },
-                            "type": "SC"
+                            "ip": "fde4:5:1100::2001/127",
+                            "description": "Link to P3-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P1-BR-eth1",
+                            "dead_time": 40
                         },
                         {
-                            "ip": "fde4::6:deaf",
-                            "as_num": "65006",
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4::5:deaf/64",
-                                "description": "eBGP Link to 65006",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "rubicon",
-                                "type": "e",
-                                "dead_time": 40
-                            },
-                            "type": "P"
+                            "ip": "fde4:5:1100::3001/127",
+                            "description": "Link to P4-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P1-BR-eth2",
+                            "dead_time": 40
                         },
                         {
-                            "ip": "fde4::4:beef",
-                            "as_num": "65004",
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4::5:babe/64",
-                                "description": "eBGP Link to 65004",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "celadon",
-                                "type": "e",
-                                "dead_time": 40
-                            },
-                            "type": "C"
+                            "ip": "fde4::5:cafe/64",
+                            "description": "eBGP Link to 64512",
+                            "type": "e",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "styx",
+                            "dead_time": 40
                         },
                         {
-                            "ip": "fde4::7:face",
-                            "as_num": "65007",
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4::5:face/64",
-                                "description": "eBGP Link to 65007",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "kerlaugar",
-                                "type": "e",
-                                "dead_time": 40
-                            },
-                            "type": "CB"
-                        }
-                    ],
-                    "color": 0,
-                    "customers": [
+                            "ip": "fde4::5:dead/64",
+                            "description": "eBGP Link to 65001",
+                            "type": "e",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "lethe",
+                            "dead_time": 40
+                        },
                         {
-                            "interface": {
-                                "cost": 5,
-                                "hello_time": 10,
-                                "ip": "fde4:5:1100::70/127",
-                                "description": "Link to P1-BR",
-                                "instance_id": 0,
-                                "active": true,
-                                "area": "0.0.0.0",
-                                "name": "CUST1--BR-eth0",
-                                "type": null,
-                                "dead_time": 40
-                            },
-                            "subnet": "fde4:5:3100:00::/56",
-                            "type": "home"
+                            "ip": "fde4::5:babe/64",
+                            "description": "eBGP Link to 65004",
+                            "type": "e",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "celadon",
+                            "dead_time": 40
                         }
                     ]
                 },
                 {
-                    "hostname": "P2-BR",
-                    "bridge_nodes": [],
-                    "pop_name": "BR",
-                    "lo_ip": "fde4:5:2100::2/128",
-                    "name": "P2-BR",
-                    "direct_neighbors": [
-                        "P4-BR",
-                        "P3-BR",
-                        "P1-BR",
-                        "P6-AT"
-                    ],
                     "passwd": "zebra",
-                    "router_id": "59.59.59.3",
-                    "as_num": 65005,
-                    "interfaces": [
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::11/127",
-                            "description": "Link to P1-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P2-BR-eth0",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::41/127",
-                            "description": "Link to P3-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P2-BR-eth1",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::51/127",
-                            "description": "Link to P4-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P2-BR-eth2",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1b00::21/127",
-                            "description": "Link to P6-AT",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P2-BR-eth3",
-                            "type": null,
-                            "dead_time": 40
-                        }
-                    ],
-                    "ibgp_neighbors": [
-                        {
-                            "ip": "fde4:5:2100::4",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        }
-                    ],
-                    "type": [
-                        "P"
-                    ],
-                    "routerbgp_id": "20.20.0.3",
-                    "ebgp_neighbors": [],
-                    "color": 1,
-                    "customers": []
-                },
-                {
-                    "hostname": "P3-BR",
-                    "bridge_nodes": [],
-                    "pop_name": "BR",
-                    "lo_ip": "fde4:5:2100::3/128",
-                    "name": "P3-BR",
-                    "direct_neighbors": [
-                        "P4-BR",
-                        "P1-BR",
-                        "P2-BR"
-                    ],
-                    "passwd": "zebra",
-                    "router_id": "59.59.59.4",
-                    "as_num": 65005,
-                    "interfaces": [
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::20/127",
-                            "description": "Link to P1-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P3-BR-eth0",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::40/127",
-                            "description": "Link to P2-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P3-BR-eth1",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::60/127",
-                            "description": "Link to P4-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P3-BR-eth2",
-                            "type": null,
-                            "dead_time": 40
-                        }
-                    ],
-                    "ibgp_neighbors": [
-                        {
-                            "ip": "fde4:5:2100::4",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        },
-                        {
-                            "ip": "fde4:5:2100::1",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        },
-                        {
-                            "ip": "fde4:5:2200::1",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        }
-                    ],
-                    "type": [
-                        "P",
-                        "RR"
-                    ],
-                    "routerbgp_id": "20.20.0.4",
-                    "ebgp_neighbors": [],
-                    "color": 0,
-                    "customers": []
-                },
-                {
-                    "hostname": "P4-BR",
-                    "bridge_nodes": [],
-                    "pop_name": "BR",
-                    "lo_ip": "fde4:5:2100::4/128",
-                    "name": "P4-BR",
                     "direct_neighbors": [
                         "P3-BR",
-                        "P1-BR",
-                        "P2-BR"
-                    ],
-                    "passwd": "zebra",
-                    "router_id": "59.59.59.5",
-                    "as_num": 65005,
-                    "interfaces": [
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::30/127",
-                            "description": "Link to P1-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P4-BR-eth0",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::50/127",
-                            "description": "Link to P2-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P4-BR-eth1",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::61/127",
-                            "description": "Link to P3-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P4-BR-eth2",
-                            "type": null,
-                            "dead_time": 40
-                        }
-                    ],
-                    "ibgp_neighbors": [
-                        {
-                            "ip": "fde4:5:2100::3",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        },
-                        {
-                            "ip": "fde4:5:2100::2",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        },
-                        {
-                            "ip": "fde4:5:2200::2",
-                            "as_num": 65005,
-                            "type": "IBGP"
-                        }
-                    ],
-                    "type": [
-                        "P",
-                        "RR"
-                    ],
-                    "routerbgp_id": "20.20.0.5",
-                    "ebgp_neighbors": [],
-                    "color": 1,
-                    "customers": []
-                }
-            ],
-            "type": "core",
-            "router_names": [
-                "P1-BR",
-                "P2-BR",
-                "P3-BR",
-                "P4-BR"
-            ],
-            "location": "BR",
-            "name": "POP-BR-core"
-        },
-        {
-            "routers": [
-                {
-                    "hostname": "P5-AT",
-                    "bridge_nodes": [],
-                    "pop_name": "AT",
-                    "lo_ip": "fde4:5:2200::1/128",
-                    "name": "P5-AT",
-                    "direct_neighbors": [
-                        "P6-AT",
+                        "P4-BR",
                         "P1-BR"
                     ],
-                    "passwd": "zebra",
-                    "router_id": "59.59.59.6",
                     "as_num": 65005,
-                    "interfaces": [
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1200::10/127",
-                            "description": "Link to P6-AT",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P5-AT-eth0",
-                            "type": null,
-                            "dead_time": 40
-                        },
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1b00::10/127",
-                            "description": "Link to P1-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "P5-AT-eth1",
-                            "type": null,
-                            "dead_time": 40
-                        }
-                    ],
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:2100::3",
                             "as_num": 65005,
-                            "type": "IBGP"
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::4"
                         }
                     ],
+                    "hostname": "P2-BR",
+                    "color": 1,
+                    "customers": [],
+                    "router_id": "59.59.59.3",
+                    "pop_name": "BR",
+                    "bridge_nodes": [],
+                    "lo_ip": "fde4:5:2100::2/128",
+                    "ebgp_neighbors": [],
+                    "routerbgp_id": "20.20.0.3",
                     "type": [
                         "P"
                     ],
-                    "routerbgp_id": "20.20.0.6",
-                    "ebgp_neighbors": [],
-                    "color": 0,
-                    "customers": []
+                    "name": "P2-BR",
+                    "interfaces": [
+                        {
+                            "ip": "fde4:5:1100::1001/127",
+                            "description": "Link to P1-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P2-BR-eth0",
+                            "dead_time": 40
+                        },
+                        {
+                            "ip": "fde4:5:1100::4001/127",
+                            "description": "Link to P3-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P2-BR-eth1",
+                            "dead_time": 40
+                        },
+                        {
+                            "ip": "fde4:5:1100::5001/127",
+                            "description": "Link to P4-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P2-BR-eth2",
+                            "dead_time": 40
+                        }
+                    ]
                 },
                 {
-                    "hostname": "P6-AT",
-                    "bridge_nodes": [],
-                    "pop_name": "AT",
-                    "lo_ip": "fde4:5:2200::2/128",
-                    "name": "P6-AT",
-                    "direct_neighbors": [
-                        "P5-AT",
-                        "P2-BR"
-                    ],
                     "passwd": "zebra",
-                    "router_id": "59.59.59.7",
+                    "direct_neighbors": [
+                        "P2-BR",
+                        "P4-BR",
+                        "P1-BR"
+                    ],
                     "as_num": 65005,
+                    "ibgp_neighbors": [
+                        {
+                            "as_num": 65005,
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::4"
+                        },
+                        {
+                            "as_num": 65005,
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::1"
+                        }
+                    ],
+                    "hostname": "P3-BR",
+                    "color": 0,
+                    "customers": [],
+                    "router_id": "59.59.59.4",
+                    "pop_name": "BR",
+                    "bridge_nodes": [],
+                    "lo_ip": "fde4:5:2100::3/128",
+                    "ebgp_neighbors": [],
+                    "routerbgp_id": "20.20.0.4",
+                    "type": [
+                        "P",
+                        "RR"
+                    ],
+                    "name": "P3-BR",
                     "interfaces": [
                         {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1200::11/127",
-                            "description": "Link to P5-AT",
+                            "ip": "fde4:5:1100::2000/127",
+                            "description": "Link to P1-BR",
+                            "type": "i",
                             "instance_id": 0,
-                            "active": true,
                             "area": "0.0.0.0",
-                            "name": "P6-AT-eth0",
-                            "type": null,
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P3-BR-eth0",
                             "dead_time": 40
                         },
                         {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1b00::20/127",
+                            "ip": "fde4:5:1100::4000/127",
                             "description": "Link to P2-BR",
+                            "type": "i",
                             "instance_id": 0,
-                            "active": true,
                             "area": "0.0.0.0",
-                            "name": "P6-AT-eth1",
-                            "type": null,
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P3-BR-eth1",
+                            "dead_time": 40
+                        },
+                        {
+                            "ip": "fde4:5:1100::6000/127",
+                            "description": "Link to P4-BR",
+                            "type": "i",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P3-BR-eth2",
                             "dead_time": 40
                         }
+                    ]
+                },
+                {
+                    "passwd": "zebra",
+                    "direct_neighbors": [
+                        "P2-BR",
+                        "P3-BR",
+                        "P1-BR"
                     ],
+                    "as_num": 65005,
                     "ibgp_neighbors": [
                         {
-                            "ip": "fde4:5:2100::4",
                             "as_num": 65005,
-                            "type": "IBGP"
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::3"
+                        },
+                        {
+                            "as_num": 65005,
+                            "type": "IBGP",
+                            "ip": "fde4:5:2100::2"
                         }
                     ],
-                    "type": [
-                        "P"
-                    ],
-                    "routerbgp_id": "20.20.0.7",
-                    "ebgp_neighbors": [],
+                    "hostname": "P4-BR",
                     "color": 1,
-                    "customers": []
+                    "customers": [],
+                    "router_id": "59.59.59.5",
+                    "pop_name": "BR",
+                    "bridge_nodes": [],
+                    "lo_ip": "fde4:5:2100::4/128",
+                    "ebgp_neighbors": [],
+                    "routerbgp_id": "20.20.0.5",
+                    "type": [
+                        "P",
+                        "RR"
+                    ],
+                    "name": "P4-BR",
+                    "interfaces": [
+                        {
+                            "ip": "fde4:5:1100::3000/127",
+                            "description": "Link to P1-BR",
+                            "type": "i",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P4-BR-eth0",
+                            "dead_time": 40
+                        },
+                        {
+                            "ip": "fde4:5:1100::5000/127",
+                            "description": "Link to P2-BR",
+                            "type": "i",
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P4-BR-eth1",
+                            "dead_time": 40
+                        },
+                        {
+                            "ip": "fde4:5:1100::6001/127",
+                            "description": "Link to P3-BR",
+                            "type": null,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "cost": 5,
+                            "active": true,
+                            "hello_time": 10,
+                            "name": "P4-BR-eth2",
+                            "dead_time": 40
+                        }
+                    ]
                 }
             ],
-            "type": "limb",
-            "router_names": [
-                "P5-AT",
-                "P6-AT"
-            ],
-            "location": "AT",
-            "name": "POP--limb"
+            "name": "POP-BR-core",
+            "location": "BR"
         }
     ],
-    "customers": [
-        {
-            "routers": [
-                {
-                    "hostname": "CUST1--BR",
-                    "bridge_nodes": [],
-                    "pop_name": "BR",
-                    "lo_ip": "fde4:5:2100::1/128",
-                    "name": "CUST1--BR",
-                    "direct_neighbors": [
-                        "P1-BR"
-                    ],
-                    "passwd": "zebra",
-                    "router_id": "60.60.60.1",
-                    "as_num": 65005,
-                    "interfaces": [
-                        {
-                            "cost": 5,
-                            "hello_time": 10,
-                            "ip": "fde4:5:1100::70/127",
-                            "description": "Link to P1-BR",
-                            "instance_id": 0,
-                            "active": true,
-                            "area": "0.0.0.0",
-                            "name": "CUST1--BR-eth0",
-                            "type": null,
-                            "dead_time": 40
-                        }
-                    ],
-                    "ibgp_neighbors": [],
-                    "type": [
-                        "P"
-                    ],
-                    "routerbgp_id": "60.60.61.1",
-                    "ebgp_neighbors": [],
-                    "color": 0,
-                    "customers": []
-                }
-            ],
-            "type": "home",
-            "router_names": [
-                "CUST1--BR"
-            ],
-            "location": "BR",
-            "name": "CUST-home"
-        }
-    ]
+    "name": "GROUP 5 ISP Network",
+    "customers": []
 }
