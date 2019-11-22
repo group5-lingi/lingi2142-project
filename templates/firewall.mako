@@ -40,9 +40,12 @@ ip6tables -A OUTPUT -p ipv6-icmp -j ACCEPT
 # Block traffic to our routers (maybe except some subnet)
 
 # Allow OSPF inside our network
-ip6tables -A INPUT -p 89 -j ACCEPT
-ip6tables -A OUTPUT -p 89 -j ACCEPT
-ip6tables -A FORWARD -p 89 -j ACCEPT
+%for interface in data["interfaces"]:
+%if interface["type"] == "i":
+ip6tables -A INPUT -p 89 -i ${interface["name"]} -j ACCEPT
+ip6tables -A OUTPUT -p 89 -o ${interface["name"]} -j ACCEPT
+%endif
+%endfor
 
 # Allow ICMPv6 inside our network
 
