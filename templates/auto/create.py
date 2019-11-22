@@ -6,7 +6,8 @@ import sys
 import json
 from pprint import pprint
 from ipaddress import ip_address
-
+import random
+import string
 IP_CONF = None
 
 
@@ -35,6 +36,7 @@ def create_from_file(filename):
             f.close()
     except:
         sys.exit("error in parsing")
+#    pprint(data)
     net = create_network(data)
     generate_mini_topo(net)
 
@@ -62,6 +64,12 @@ def generate_mini_topo(network):
         f.write("}\n")
         f.close()
 
+
+def random_pass(stringLength=10):
+    """Generate a random string of fixed length for bgp passwords"""
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(stringLength))
+        
 def add_links(f, net):
     links_set= {}
     for p in net.pops:
@@ -132,11 +140,12 @@ class Interface:
 
 
 class BGPNeighbor:
-    def __init__(self, ip, as_num, type, interface=None):
+    def __init__(self, ip, as_num, type, interface=None, password=None):
         self.ip = ip
         self.as_num = as_num
         self.interface = interface
         self.type = type
+        self.password = password
     def export(self):
         d =  vars(self)
         if self.interface == None:
@@ -229,9 +238,10 @@ class Router:
         
         
 class POP:
-    def __init__(self, network, location, name="POP-", type="limb", subnet=None):
+    def __init__(self, network, location, as_num, name="POP-", type="limb", subnet=None):
         self.routers = []
         self.network = network
+        self.as_num = as_num
         self.type = type
         self.name = name+"-"+type
         self.location = location
@@ -288,6 +298,7 @@ class Network:
         self.customers = []
         self.total_routers = 0
         self.total_inter_pop_links = 1
+        self.as_num = self.config['AS']
         self.data = data
         self.total_home_customers = 0
         self.total_enterprise_customers = 0
@@ -343,7 +354,7 @@ class Network:
     def create_customers(self):
         for i in range(len(self.data['cust'])):
             cust_info = self.data['cust'][i]
-            customer = POP(self, cust_info[0], name="CUST", type=cust_info[1], subnet=self.generate_next_customer_subnet(cust_info[1], self.get_pop(cust_info[0])))
+            customer = POP(self, cust_info[0], int(cust_info[2]), name="CUST", type=cust_info[1], subnet=self.generate_next_customer_subnet(cust_info[1], self.get_pop(cust_info[0])))
             self.setup_customer(customer)
             self.add_customer(customer)
 
@@ -361,7 +372,7 @@ class Network:
             location = self.config['locations'][i] # str
             if self.config['locations'].index(location) == self.data['pops']:
                 break
-            pop = POP(self, location)
+            pop = POP(self, location, self.as_num)
             pop.add_core_routers()
             ## add ibgp session
             if 'core' in self.data and pop.location in self.data['core']:
@@ -387,11 +398,7 @@ class Network:
                 self.link_routers(rr2, r)
 
         # link the two together
-        self.link_routers(rr1, rr2)
-        
-
-        # create ibgp session between them
-        #self.create_ibgp_session(rr1, rr2)
+        self.link_routers(rr1, rr2)        
   
 
     # adds the interfaces the two routers will use to communicate
@@ -436,9 +443,6 @@ class Network:
         r1.direct_neighbors[r2.name] = r2
         r2.direct_neighbors[r1.name] = r1
         
-        #print(r1.name+" to "+r2.name+" : "+r1_if.ip)
-        #print(r2.name+" to "+r1.name+" : "+r2_if.ip)
-
     def generate_next_router_id(self):
         id = str(self.init_router_id + 1)
         self.init_router_id += 1
@@ -534,21 +538,23 @@ class Network:
             type = customer.type
             cust = Customer(pop, customer.routers[0].interfaces[0], customer.subnet, type)
             pop.routers[0].add_customer(cust)
+            pop.routers[0].add_bgp_neighbor(BGPNeighbor(customer.subnet, customer.as_num, type="C",
+                                                        interface=pop.routers[0].interfaces[-1]), type="e")
                                                                      
             
     
     def create_ibgp_session(self, r1, r2):
-        r1_neighbor = BGPNeighbor(r2.lo_ip.split("/")[0], r2.as_num, "IBGP")
-        r2_neighbor = BGPNeighbor(r1.lo_ip.split("/")[0], r1.as_num, "IBGP")
-
+        passw = random_pass()
+        r1_neighbor = BGPNeighbor(r2.lo_ip.split("/")[0], r2.as_num, "IBGP", password=passw)
+        r2_neighbor = BGPNeighbor(r1.lo_ip.split("/")[0], r1.as_num, "IBGP", password=passw)
         if r1.name == r2.name or r1 == r2:
             return
 
         for n in r1.ibgp_neighbors:
-            if n.ip  == r2.lo_ip :
+            if n.ip+"/128"  == r2.lo_ip :
                 return
         else:
-            print("IBGP "+r1.name+" "+r2.name)
+            #print("IBGP "+r1.name+" "+r2.name)
             r1.add_bgp_neighbor(r1_neighbor, type="i")
             r2.add_bgp_neighbor(r2_neighbor, type="i")
                   
