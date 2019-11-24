@@ -60,7 +60,7 @@ def create_network(data):
 def generate_mini_topo(network):
     with open('isp_topo', 'w') as f:
         f.write(INIT_FILE)
-        add_links(f, network)
+        add_links_v2(f, network)
         f.write("}\n")
         f.close()
 
@@ -87,7 +87,39 @@ def add_links(f, net):
         for router in p.routers:
             for b in router.bridge_nodes:
                 f.write("\tbridge_node "+router.name+" eth"+str(b["eth"])+" "+b["interface"]+"\n")
-                                  
+
+
+
+def add_links_v2(f, net):
+    all_routers = net.get_all_router_names()
+    links_set = {}
+    current_eths = {}
+    for r in all_routers:
+        current_eths[r] = 0
+    while not_finished(current_eths, net):
+        for r_str in all_routers:
+            r = net.get_router(r_str)
+            r.direct_neighbors.sort()
+            for n in r.direct_neighbors:
+                if net.get_eth_for_router(net.get_router(n), r.name) == current_eths[n] and net.get_eth_for_router(net.get_router(r.name), n) == current_eths[r.name]:
+                    f.write("\tadd_link "+r.name+" "+n+"\n")
+                    current_eths[r.name] +=1
+                    current_eths[n] += 1
+
+
+    for r_str in all_routers:
+        r = net.get_router(r_str)
+        for b in r.bridge_nodes: 
+            f.write("\tbridge_node "+r.name+" eth"+str(b["eth"])+" "+b['interface']+"\n")
+
+
+                
+                
+def not_finished(eths, net):
+    for r in eths:
+        if eths[r] < len([ i for i in net.get_router(r).interfaces if "-eth" in i['name']]):
+            return True
+    return False
                 
 
 
@@ -115,7 +147,7 @@ class Customer:
 
 
 class Interface:
-    def __init__(self, router, description="Link", ip=None, name=None, type=None):
+    def __init__(self, router, description="Link", ip=None, name=None, type=None, linked_router=None):
         if name == None:
             self.name = router.name+"-eth"+str(self.generate_next_eth_number(router))
         else:
@@ -128,6 +160,7 @@ class Interface:
         self.active = True
         self.ip = ip
         self.type= type
+        self.linked_router = linked_router
                   
         if description ==None:
             self.description = "link"
@@ -135,7 +168,7 @@ class Interface:
             self.description = description
 
     def generate_next_eth_number(self, router):
-        total_eths = len([i for i in router.interfaces if "eth" in i.name])
+        total_eths = len([i for i in router.interfaces if "-eth" in i.name])
         
         return total_eths
     def export(self):
@@ -313,6 +346,37 @@ class Network:
 
 
 
+    def get_router(self, name):
+        for p in self.pops:
+            for r in p.routers:
+                if r.name == name:
+                    return r
+        for p in self.customers:
+            for r in p.routers:
+                if r.name == name:
+                    return r
+        return None
+
+    def get_eth_for_router(self, router, name):
+        for i in router.interfaces:
+            #print(i)
+            if i['linked_router'] == name:
+                return int(i['name'][-1])
+
+    def get_all_router_names(self):
+        total = []
+        for p in self.pops:
+            for r in p.routers:
+                total.append(r.name)
+
+        for p in self.customers:
+            for r in p.routers:
+                total.append(r.name)
+
+        return total
+        
+
+
     def generate_next_home_customer_id(self):
         cust_id = format(self.total_home_customers, '04x');
         self.total_home_customers += 1
@@ -418,11 +482,11 @@ class Network:
             subnet +=  self.config['INTERPOPNET']+"00"
             subnet += "::"
 
-            r1_if = Interface(r1, description="Link to "+r2.name, type="i")
-            r1_if.ip = str(ip_address(subnet)) + format(self.total_inter_pop_link, '03x')+ "0" + self.config["prefixes"]["p2p"]
+            r1_if = Interface(r1, linked_router=r2.name, description="Link to "+r2.name, type="i")
+            r1_if.ip = str(ip_address(subnet)) + format(self.total_inter_pop_links, '03x')+ "0" + self.config["prefixes"]["p2p"]
             r1.interfaces.append(r1_if)
                         
-            r2_if = Interface(r2, description="Link to "+r1.name, type="i")
+            r2_if = Interface(r2, linked_router=r1.name, description="Link to "+r1.name, type="i")
             r2_if.ip = str(ip_address(subnet)) + format(self.total_inter_pop_links, '03x')+"1" + self.config["prefixes"]["p2p"]
             r2.interfaces.append(r2_if)
             self.total_inter_pop_links += 1
@@ -432,12 +496,12 @@ class Network:
             # same pop routers
             subnet += str(r1.pop.location_number)+"00"
             subnet += "::"
-            r1_if = Interface(r1, description="Link to "+r2.name, type="i")
+            r1_if = Interface(r1, linked_router=r2.name, description="Link to "+r2.name, type="i")
             r1_if.ip = str(ip_address(subnet)) + format( r2.pop.total_p2p, '03x')+"0"  + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
-            r2_if = Interface(r2, description="Link to "+r1.name, type="i")
+            r2_if = Interface(r2, linked_router=r1.name, description="Link to "+r1.name, type="i")
             r2_if.ip = str(ip_address(subnet)) + format(r2.pop.total_p2p, '03x')+ "1" + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
  
