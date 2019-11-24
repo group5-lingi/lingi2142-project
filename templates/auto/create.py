@@ -74,6 +74,7 @@ def add_links(f, net):
     links_set= {}
     for p in net.pops:
         for router in p.routers:
+            router.direct_neighbors.sort()
             for dn in router.direct_neighbors:
                 if router.name+"-"+dn not in links_set:
                     f.write("\tadd_link "+router.name+" "+dn+"\n")
@@ -116,7 +117,7 @@ class Customer:
 class Interface:
     def __init__(self, router, description="Link", ip=None, name=None, type=None):
         if name == None:
-            self.name = router.name+"-eth"+str(len(router.interfaces))
+            self.name = router.name+"-eth"+str(self.generate_next_eth_number(router))
         else:
             self.name = name
         self.cost = 5
@@ -133,6 +134,10 @@ class Interface:
         else:
             self.description = description
 
+    def generate_next_eth_number(self, router):
+        total_eths = len([i for i in router.interfaces if "eth" in i.name])
+        
+        return total_eths
     def export(self):
         return vars(self)
 
@@ -354,7 +359,7 @@ class Network:
     def create_customers(self):
         for i in range(len(self.data['cust'])):
             cust_info = self.data['cust'][i]
-            customer = POP(self, cust_info[0], int(cust_info[2]), name="CUST", type=cust_info[1], subnet=self.generate_next_customer_subnet(cust_info[1], self.get_pop(cust_info[0])))
+            customer = POP(self, cust_info[0], int(cust_info[2]), name="ZCUST", type=cust_info[1], subnet=self.generate_next_customer_subnet(cust_info[1], self.get_pop(cust_info[0])))
             self.setup_customer(customer)
             self.add_customer(customer)
 
@@ -362,7 +367,7 @@ class Network:
     Gives the customer 1 router with an interface
     """
     def setup_customer(self, customer):
-        r1 = Router(customer, "CUST1-", "60.60.60.1", "60.60.61.1")
+        r1 = Router(customer, "ZCUST1-", "60.60.60.1", "60.60.61.1")
         customer.add_router(r1)
         self.link_routers(r1, self.get_pop(customer.location).routers[0])
 
