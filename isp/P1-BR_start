@@ -3,15 +3,15 @@ ldconfig
 
 # Assigning IP addr for P1-BR-eth0
 ip link set dev P1-BR-eth0 up
-ip -6 addr add fde4:5:11::10/127 dev P1-BR-eth0
+ip -6 addr add fde4:5:1100::0010/127 dev P1-BR-eth0
 
 # Assigning IP addr for P1-BR-eth1
 ip link set dev P1-BR-eth1 up
-ip -6 addr add fde4:5:11::21/127 dev P1-BR-eth1
+ip -6 addr add fde4:5:1100::0021/127 dev P1-BR-eth1
 
 # Assigning IP addr for P1-BR-eth2
 ip link set dev P1-BR-eth2 up
-ip -6 addr add fde4:5:11::31/127 dev P1-BR-eth2
+ip -6 addr add fde4:5:1100::0031/127 dev P1-BR-eth2
 
 # Assigning IP addr for styx
 ip link set dev styx up
@@ -20,10 +20,6 @@ ip -6 addr add fde4::5:cafe/64 dev styx
 # Assigning IP addr for lethe
 ip link set dev lethe up
 ip -6 addr add fde4::5:dead/64 dev lethe
-
-# Assigning IP addr for rubicon
-ip link set dev rubicon up
-ip -6 addr add fde4::5:deaf/64 dev rubicon
 
 # Assigning IP addr for celadon
 ip link set dev celadon up
@@ -34,18 +30,21 @@ ip link set dev kerlaugar up
 ip -6 addr add fde4::5:face/64 dev kerlaugar
 
 # Assiging IP addr for loopback
-ip -6 addr add fde4:5:21::1/128 dev lo
+ip -6 addr add fde4:5:2100::0001/128 dev lo
 		 
 
 # zebra is required to make the link between all FRRouting daemons
 # and the linux kernel routing table
-LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p1-br.api -i /tmp/p1-br_zebra.pid &
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p1-br.api -i /tmp/p1-br_zebra.pid --v6-rr-semantics &
 
 # launching FRRouting OSPF daemon
 LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/p1-br_ospf.conf -z /tmp/p1-br.api -i /tmp/p1-br_ospf6d.pid -A 127.0.0.1 &
 
 # launching FRRouting BGP daemon
 LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/p1-br_bgp.conf -z /tmp/p1-br.api -i /tmp/p1-br_bgp.pid -A 127.0.0.1 &
+
+# Setting up the firewall
+/etc/p1-br_firewall.sh
 
 # Export vtysh
 export LD_LIBRARY_PATH=/usr/local/lib

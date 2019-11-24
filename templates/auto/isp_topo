@@ -12,10 +12,9 @@ PREFIXLEN=32
 # e.g. "${PREFIXBASE}:1234::/$((PREFIXLEN+16))"
 # This function describes the network topology that we want to emulate
 function mk_topo {
-	add_link P1-BR CUST1--BR
-	add_link P1-BR P3-BR
 	add_link P1-BR P2-BR
 	add_link P1-BR P4-BR
+	add_link P1-BR P3-BR
 	add_link P2-BR P4-BR
 	add_link P2-BR P3-BR
 	add_link P3-BR P4-BR
