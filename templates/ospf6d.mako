@@ -6,10 +6,14 @@ service advanced-vty
 !
 debug ospf6 neighbor state
 !
-%for interface in [ d for d in data['interfaces'] if d['type'] != "e" ]:
+%for interface in data['interfaces']:
+%if interface['type'] == "e":
 interface ${interface['name']}
+%else:
+interface ${interface['name']}
+%endif
     ipv6 ospf6 cost ${interface['cost']}
-    %if interface['active']:
+    %if interface['type'] == 'i':
     ipv6 ospf6 hello-interval ${interface['hello_time']}
     ipv6 ospf6 dead-interval ${interface['dead_time']}
     %else:

@@ -12,4 +12,4 @@ bgp EXT CB BR fde4::7:face/64 65007 kerlaugar
 bgp INT odd-even
 # customer stuff
 # cust BR home
-cust BR enterprise 65051
+# cust BR enterprise 65051
