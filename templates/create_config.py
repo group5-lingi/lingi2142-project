@@ -79,7 +79,7 @@ def setup_customers():
             for pop in data["customers"]:
                 print("POP "+pop['name']+" "+pop['location'])
                 print("Creating start scripts")
-                template = Template(filename="start.mako")
+                template = Template(filename="customer_start.mako")
                 for router in pop["routers"]:
                     with open("../isp/" + router['name'] + "_start", 'w') as f:
                         f.write(template.render(data=router))
@@ -123,6 +123,6 @@ def setup_customers():
 def main():
 
     setup_self()
-    #setup_customers()
+    setup_customers()
 main()
 

@@ -16,6 +16,7 @@ interface ${interface['name']}
     %if interface['type'] == 'i':
     ipv6 ospf6 hello-interval ${interface['hello_time']}
     ipv6 ospf6 dead-interval ${interface['dead_time']}
+    ipv6 ospf6 message-digest-key 1 md5 testPassword
     %else:
     ipv6 ospf6 passive
     %endif
@@ -27,6 +28,7 @@ interface lo
     ipv6 ospf6 hello-interval 40
     ipv6 ospf6 dead-interval 40
     ipv6 ospf6 instance-id 0
+    ipv6 ospf6 message-digest-key 1 md5 testPassword
 !
 router ospf6
     ospf6 router-id ${data['router_id']}
@@ -34,5 +36,6 @@ router ospf6
     interface ${nic['name']} area ${nic['area']}
     %endfor
     interface lo area 0.0.0.0
+    ipv6 ospf6 authentication message-digest
 !
 

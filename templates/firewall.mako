@@ -50,10 +50,17 @@ ip6tables -A OUTPUT -p 89 -o ${interface["name"]} -j ACCEPT
 # Allow ICMPv6 inside our network
 
 # Block spoofing attempts / Only allow from the assigned subnet
+%for customer in data["customers"]:
+ip6tables -A INPUT -i ${customer["interface"]["name"]} ! -s ${customer["subnet"]} -j DROP
+ip6tables -A OUTPUT -o ${customer["interface"]["name"]} ! -d ${customer["subnet"]} -j DROP
+ip6tables -A FORWARD -i ${customer["interface"]["name"]} ! -s ${customer["subnet"]} -j DROP
+ip6tables -A FORWARD -o ${customer["interface"]["name"]} ! -d ${customer["subnet"]} -j DROP
+%endfor
 
 # Allow stuff that goes through our network
 ip6tables -A FORWARD ! -s fde4:5:1000::/36 ! -d fde4:5:1000::/36 -j ACCEPT
 ip6tables -A FORWARD ! -s fde4:5:1000::/36 ! -d fde4:5:2000::/36 -j ACCEPT
 ip6tables -A FORWARD ! -s fde4:5:2000::/36 ! -d fde4:5:1000::/36 -j ACCEPT
 ip6tables -A FORWARD ! -s fde4:5:2000::/36 ! -d fde4:5:2000::/36 -j ACCEPT
+
 

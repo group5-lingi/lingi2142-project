@@ -14,8 +14,8 @@ router bgp ${data["as_num"]}
     network fde4:5::/32
     neighbor ${neighbor["ip"].split("/")[0]} activate
     neighbor ${neighbor["ip"].split("/")[0]} route-map set-nexthop in
-    %if neighbor["ip"] == "fde4::1:dead":
-    neighbor fde4::1:dead password ASes6500165005
+    %if neighbor["ip"] == "fde4:5:3000:1::1":
+    neighbor fde4:5:3000:1::1 password ASes6500165005
     %endif
   exit-address-family
 
@@ -36,6 +36,11 @@ router bgp ${data["as_num"]}
     neighbor ${neighbor["ip"]} route-reflector-client
   %endif
     neighbor ${neighbor["ip"]} update-source lo
+  %if len(data["ebgp_neighbors"]) > 0:
+    !neighbor ${neighbor["ip"]} route-map set-nexthop out
+    !neighbor ${neighbor["ip"]} route-map set-nexthop in
+  %endif
+    neighbor ${neighbor["ip"]} password ${neighbor["password"]}
   exit-address-family
 
   %endfor  
