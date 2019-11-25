@@ -21,6 +21,22 @@ ip -6 addr add fde4:5:1b00::0021/127 dev P2-BR-eth3
 ip link set dev P2-BR-eth4 up
 ip -6 addr add fde4:5:1b00::0041/127 dev P2-BR-eth4
 
+# Assigning IP addr for P2-BR-eth5
+ip link set dev P2-BR-eth5 up
+ip -6 addr add fde4:5:1b00::0061/127 dev P2-BR-eth5
+
+# Assigning IP addr for P2-BR-eth6
+ip link set dev P2-BR-eth6 up
+ip -6 addr add fde4:5:1b00::0081/127 dev P2-BR-eth6
+
+# Assigning IP addr for P2-BR-eth7
+ip link set dev P2-BR-eth7 up
+ip -6 addr add fde4:5:1b00::00a1/127 dev P2-BR-eth7
+
+# Assigning IP addr for P2-BR-eth8
+ip link set dev P2-BR-eth8 up
+ip -6 addr add fde4:5:1b00::00c1/127 dev P2-BR-eth8
+
 # Assiging IP addr for loopback
 ip -6 addr add fde4:5:2100::0002/128 dev lo
 		 

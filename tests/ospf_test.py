@@ -1,3 +1,4 @@
+
 import asyncio
 import sys
 import mtrpacket
@@ -7,7 +8,6 @@ import json
 
 def main(lo_ips):
     fails = 0
-    print(lo_ips)
     loop = asyncio.get_event_loop()
     coroutines = []
     for i, r in enumerate(lo_ips):
@@ -47,9 +47,6 @@ if __name__ == "__main__":
         lo_ips = {}
         for p in data["pops"]:
             for r in p["routers"]:
-                lo_ips[r["name"]] = r["lo_ip"].split("/")[0]
-        for c in data["customers"]:
-            for r in c["routers"]:
                 lo_ips[r["name"]] = r["lo_ip"].split("/")[0]
     main(lo_ips)
 

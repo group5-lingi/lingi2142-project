@@ -57,3 +57,5 @@ puppet:x:114:
 scanner:x:115:saned
 colord:x:116:
 saned:x:117:
+kvm:x:118:
+utempter:x:119:

@@ -21,6 +21,22 @@ ip -6 addr add fde4:5:1b00::0011/127 dev P1-BR-eth3
 ip link set dev P1-BR-eth4 up
 ip -6 addr add fde4:5:1b00::0031/127 dev P1-BR-eth4
 
+# Assigning IP addr for P1-BR-eth5
+ip link set dev P1-BR-eth5 up
+ip -6 addr add fde4:5:1b00::0051/127 dev P1-BR-eth5
+
+# Assigning IP addr for P1-BR-eth6
+ip link set dev P1-BR-eth6 up
+ip -6 addr add fde4:5:1b00::0071/127 dev P1-BR-eth6
+
+# Assigning IP addr for P1-BR-eth7
+ip link set dev P1-BR-eth7 up
+ip -6 addr add fde4:5:1b00::0091/127 dev P1-BR-eth7
+
+# Assigning IP addr for P1-BR-eth8
+ip link set dev P1-BR-eth8 up
+ip -6 addr add fde4:5:1b00::00b1/127 dev P1-BR-eth8
+
 # Assigning IP addr for styx
 ip link set dev styx up
 ip -6 addr add fde4::5:cafe/64 dev styx
@@ -35,15 +51,15 @@ ip -6 addr add fde4::5:deaf/64 dev rubicon
 
 # Assigning IP addr for celadon
 ip link set dev celadon up
-ip -6 addr add fde4::5:babe/64 dev celadon
+ip -6 addr add fde4:4:f001:5::dead/64 dev celadon
 
 # Assigning IP addr for kerlaugar
 ip link set dev kerlaugar up
 ip -6 addr add fde4::5:face/64 dev kerlaugar
 
-# Assigning IP addr for P1-BR-eth5
-ip link set dev P1-BR-eth5 up
-ip -6 addr add fde4:5:1100::0070/127 dev P1-BR-eth5
+# Assigning IP addr for P1-BR-eth9
+ip link set dev P1-BR-eth9 up
+ip -6 addr add fde4:5:1100::0070/127 dev P1-BR-eth9
 
 # Assiging IP addr for loopback
 ip -6 addr add fde4:5:2100::0001/128 dev lo
