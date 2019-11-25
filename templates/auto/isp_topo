@@ -13,13 +13,21 @@ PREFIXLEN=32
 # This function describes the network topology that we want to emulate
 function mk_topo {
 	add_link P1-BR P2-BR
-	add_link P1-BR P4-BR
 	add_link P1-BR P3-BR
-	add_link P2-BR P4-BR
+	add_link P1-BR P4-BR
 	add_link P2-BR P3-BR
+	add_link P2-BR P4-BR
 	add_link P3-BR P4-BR
+	add_link P5-AT P6-AT
+	add_link P6-AT P2-BR
+	add_link P7-EF P8-EF
+	add_link P8-EF P2-BR
+	add_link P1-BR P5-AT
+	add_link P1-BR P7-EF
+	add_link P1-BR ZCUST1--BR
 	bridge_node P1-BR eth1 styx
 	bridge_node P1-BR eth2 lethe
-	bridge_node P1-BR eth3 celadon
-	bridge_node P1-BR eth4 kerlaugar
+	bridge_node P1-BR eth3 rubicon
+	bridge_node P1-BR eth4 celadon
+	bridge_node P1-BR eth5 kerlaugar
 }

@@ -197,7 +197,7 @@ class BGPNeighbor:
 
 class Router:
 
-    def __init__(self, pop, name, router_id, routerbgp_id, passwd="zebra", type=["P"],  hostname=None, color=None):
+    def __init__(self, pop, name, router_id, routerbgp_id, passwd="zebra", type=["P"],  hostname=None, color=None, lo_ip=None, as_num=None):
         # default type P : Provider, PE : Customer Edge, RR : Router reflector
         self.pop = pop # Point of Presence
         if color != None:
@@ -217,9 +217,12 @@ class Router:
             self.hostname = hostname
         self.router_id = router_id
         self.routerbgp_id = routerbgp_id
-        self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"00::") #+ len(pop.routers) + 1
-        self.lo_ip = str(self.lo_ip) + format(len(pop.routers) + 1, '04x')
-        self.lo_ip = str(self.lo_ip) + self.pop.network.config["prefixes"]["lo"]
+        if lo_ip == None:
+            self.lo_ip = ip_address(self.pop.network.config["GROUP5"]+self.pop.network.config["types"]["lo"]+str(self.pop.location_number)+"00::") #+ len(pop.routers) + 1
+            self.lo_ip = str(self.lo_ip) + format(len(pop.routers) + 1, '04x')
+            self.lo_ip = str(self.lo_ip) + self.pop.network.config["prefixes"]["lo"]
+        else:
+            self.lo_ip = lo_ip
         self.as_num = IP_CONF["AS"]
         self.ebgp_neighbors = []
         self.ibgp_neighbors = []        
@@ -431,9 +434,11 @@ class Network:
     Gives the customer 1 router with an interface
     """
     def setup_customer(self, customer):
-        r1 = Router(customer, "ZCUST1-", "60.60.60.1", "60.60.61.1")
+        r1 = Router(customer, "ZCUST1-", "60.60.60.1", "60.60.61.1",
+                    lo_ip=customer.subnet.split("/")[0]+"1"+self.config["prefixes"][customer.type])
+        r1.set_as_num(customer.as_num)
         customer.add_router(r1)
-        self.link_routers(r1, self.get_pop(customer.location).routers[0])
+        self.link_routers(self.get_pop(customer.location).routers[0], r1)
 
     def create_pops(self):
         """ Creates our points of presence"""
@@ -493,20 +498,24 @@ class Network:
 
 
         else :
+            type="i"
+            if r2.pop.type == "home" or r2.pop.type == "enterprise":
+                type= "e"
             # same pop routers
             subnet += str(r1.pop.location_number)+"00"
             subnet += "::"
-            r1_if = Interface(r1, linked_router=r2.name, description="Link to "+r2.name, type="i")
-            r1_if.ip = str(ip_address(subnet)) + format( r2.pop.total_p2p, '03x')+"0"  + self.config["prefixes"]["p2p"]
+            r1_if = Interface(r1, linked_router=r2.name, description="Link to "+r2.name, type=type)
+            r1_if.ip = str(ip_address(subnet)) + format( r1.pop.total_p2p, '03x')+"0"  + self.config["prefixes"]["p2p"]
 
             r1.interfaces.append(r1_if)
                         
-            r2_if = Interface(r2, linked_router=r1.name, description="Link to "+r1.name, type="i")
-            r2_if.ip = str(ip_address(subnet)) + format(r2.pop.total_p2p, '03x')+ "1" + self.config["prefixes"]["p2p"]            
+            r2_if = Interface(r2, linked_router=r1.name, description="Link to "+r1.name, type=type)
+            r2_if.ip = str(ip_address(subnet)) + format(r1.pop.total_p2p, '03x')+ "1" + self.config["prefixes"]["p2p"]            
             r2.interfaces.append(r2_if)
  
 
             r1.pop.total_p2p += 1
+
         
 
         r1.direct_neighbors[r2.name] = r2
@@ -607,10 +616,11 @@ class Network:
             type = customer.type
             cust = Customer(pop, customer.routers[0].interfaces[0], customer.subnet, type)
             pop.routers[0].add_customer(cust)
-            pop.routers[0].add_bgp_neighbor(BGPNeighbor(customer.subnet, customer.as_num, type="C",
+            pop.routers[0].add_bgp_neighbor(BGPNeighbor(customer.routers[0].interfaces[0].ip.split("/")[0], customer.as_num, type="C",
                                                         interface=pop.routers[0].interfaces[-1]), type="e")
-                                                                     
-            
+
+            customer.routers[0].add_bgp_neighbor(BGPNeighbor(pop.routers[0].interfaces[-1].ip.split("/")[0], self.config["AS"], type="P",
+                                                 interface=customer.routers[0].interfaces[0]), type="e")
     
     def create_ibgp_session(self, r1, r2):
         passw = random_pass()
