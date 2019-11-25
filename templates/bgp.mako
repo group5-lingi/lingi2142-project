@@ -18,16 +18,13 @@ router bgp ${data["as_num"]}
   neighbor ${neighbor["ip"].split("/")[0]} remote-as ${neighbor["as_num"]}
   address-family ipv6 unicast
     network fde4:5::/32
-    neighbor ${neighbor["ip"].split("/")[0]} route-map allow-own out
-    neighbor ${neighbor["ip"].split("/")[0]} route-map NO-EXPORT out
-    neighbor ${neighbor["ip"].split("/")[0]} route-map NO-ADVERTISE-E out
     
 
 
     %if neighbor["type"] == "SC":
     neighbor ${neighbor["ip"].split("/")[0]} route-map rm-in-sc in
     neighbor ${neighbor["ip"].split("/")[0]} route-map rm-out-sc-p-allow-own out
-    neighbor ${neighbor["ip"].split("/")[0]} route-map rm-out-sc-p-allow-client out
+
 
     %endif
     %if neighbor["type"] == "P":
