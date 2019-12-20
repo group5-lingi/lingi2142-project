@@ -641,7 +641,7 @@ class Network:
     def setup_ibgp_same_color(self,  rr):
         routers = self.get_all_routers()
         for r in routers:
-            if r.name != rr.name:
+            if r.name != rr.name and r.color == rr.color:
                 self.create_ibgp_session(r, rr)
 
     def export(self):
