@@ -1,0 +1,30 @@
+#! /bin/sh
+ldconfig
+
+# Assigning IP addr for P6-AT-eth0
+ip link set dev P6-AT-eth0 up
+ip -6 addr add fde4:5:1200::0011/127 dev P6-AT-eth0
+
+# Assigning IP addr for P6-AT-eth1
+ip link set dev P6-AT-eth1 up
+ip -6 addr add fde4:5:1b00::0020/127 dev P6-AT-eth1
+
+# Assiging IP addr for loopback
+ip -6 addr add fde4:5:2200::0002/128 dev lo
+		 
+
+# zebra is required to make the link between all FRRouting daemons
+# and the linux kernel routing table
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p6-at.api -i /tmp/p6-at_zebra.pid --v6-rr-semantics &
+
+# launching FRRouting OSPF daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/p6-at_ospf.conf -z /tmp/p6-at.api -i /tmp/p6-at_ospf6d.pid -A 127.0.0.1 &
+
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/p6-at_bgp.conf -z /tmp/p6-at.api -i /tmp/p6-at_bgp.pid -A 127.0.0.1 &
+
+# Setting up the firewall
+/etc/p6-at_firewall.sh
+
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib

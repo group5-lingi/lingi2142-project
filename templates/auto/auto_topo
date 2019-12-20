@@ -3,10 +3,10 @@ pops 7
 # route reflectors
 core BR
 bgp EXT P BR fde4::1/64 64512 styx
-bgp EXT SC BR fde4:5:3000:1::1/64 65001 lethe
-bgp EXT P BR fde4::6:deaf/64 65006 rubicon
-bgp EXT C BR fde4:4:f001:5::beef/64 65004 celadon
-bgp EXT CB BR fde4::7:face/64 65007 kerlaugar
+bgp EXT SC AT fde4:5:3000:1::1/64 65001 lethe
+bgp EXT P EF fde4::6:deaf/64 65006 rubicon
+bgp EXT C FB fde4:4:f001:5::beef/64 65004 celadon
+bgp EXT CB LI fde4::7:face/64 65007 kerlaugar
 # the following connects the routers to the
 # two route reflectors in our core POP (BR)
 bgp INT odd-even

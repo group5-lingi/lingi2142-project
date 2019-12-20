@@ -1,0 +1,16 @@
+/home/vagrant/ISPNetwork/isp/templates /templates none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/common /common none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/puppetmodules /puppetmodules none rw,bind 0 0
+/run/P4-BR /run none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/templates /templates none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/common /common none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/puppetmodules /puppetmodules none rw,bind 0 0
+/run/P4-BR /run none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/templates /templates none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/common /common none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/puppetmodules /puppetmodules none rw,bind 0 0
+/run/P4-BR /run none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/templates /templates none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/common /common none rw,bind 0 0
+/home/vagrant/ISPNetwork/isp/puppetmodules /puppetmodules none rw,bind 0 0
+/run/P4-BR /run none rw,bind 0 0

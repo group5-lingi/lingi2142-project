@@ -1,0 +1,30 @@
+#! /bin/sh
+ldconfig
+
+# Assigning IP addr for P12-LI-eth0
+ip link set dev P12-LI-eth0 up
+ip -6 addr add fde4:5:1500::0011/127 dev P12-LI-eth0
+
+# Assigning IP addr for P12-LI-eth1
+ip link set dev P12-LI-eth1 up
+ip -6 addr add fde4:5:1b00::0080/127 dev P12-LI-eth1
+
+# Assiging IP addr for loopback
+ip -6 addr add fde4:5:2500::0002/128 dev lo
+		 
+
+# zebra is required to make the link between all FRRouting daemons
+# and the linux kernel routing table
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p12-li.api -i /tmp/p12-li_zebra.pid --v6-rr-semantics &
+
+# launching FRRouting OSPF daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/p12-li_ospf.conf -z /tmp/p12-li.api -i /tmp/p12-li_ospf6d.pid -A 127.0.0.1 &
+
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/p12-li_bgp.conf -z /tmp/p12-li.api -i /tmp/p12-li_bgp.pid -A 127.0.0.1 &
+
+# Setting up the firewall
+/etc/p12-li_firewall.sh
+
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib

@@ -1,0 +1,26 @@
+#! /bin/sh
+ldconfig
+
+# Assigning IP addr for ZCUST1--BR-eth0
+ip link set dev ZCUST1--BR-eth0 up
+ip -6 addr add fde4:5:1100::0071/127 dev ZCUST1--BR-eth0
+
+# Assiging IP addr for loopback
+ip -6 addr add fde4:5:4000::1/48 dev lo
+		 
+
+# zebra is required to make the link between all FRRouting daemons
+# and the linux kernel routing table
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/zcust1--br.api -i /tmp/zcust1--br_zebra.pid --v6-rr-semantics &
+
+# launching FRRouting OSPF daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/zcust1--br_ospf.conf -z /tmp/zcust1--br.api -i /tmp/zcust1--br_ospf6d.pid -A 127.0.0.1 &
+
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/zcust1--br_bgp.conf -z /tmp/zcust1--br.api -i /tmp/zcust1--br_bgp.pid -A 127.0.0.1 &
+
+# Setting up the firewall
+# /etc/zcust1--br_firewall.sh
+
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib

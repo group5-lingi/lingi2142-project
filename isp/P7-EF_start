@@ -1,0 +1,34 @@
+#! /bin/sh
+ldconfig
+
+# Assigning IP addr for P7-EF-eth0
+ip link set dev P7-EF-eth0 up
+ip -6 addr add fde4:5:1300::0010/127 dev P7-EF-eth0
+
+# Assigning IP addr for P7-EF-eth1
+ip link set dev P7-EF-eth1 up
+ip -6 addr add fde4:5:1b00::0030/127 dev P7-EF-eth1
+
+# Assigning IP addr for rubicon
+ip link set dev rubicon up
+ip -6 addr add fde4::5:deaf/64 dev rubicon
+
+# Assiging IP addr for loopback
+ip -6 addr add fde4:5:2300::0001/128 dev lo
+		 
+
+# zebra is required to make the link between all FRRouting daemons
+# and the linux kernel routing table
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/zebra -A 127.0.0.1 -f /etc/zebra.conf -z /tmp/p7-ef.api -i /tmp/p7-ef_zebra.pid --v6-rr-semantics &
+
+# launching FRRouting OSPF daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/ospf6d -f /etc/p7-ef_ospf.conf -z /tmp/p7-ef.api -i /tmp/p7-ef_ospf6d.pid -A 127.0.0.1 &
+
+# launching FRRouting BGP daemon
+LD_LIBRARY_PATH=/usr/local/lib /usr/lib/frr/bgpd -f /etc/p7-ef_bgp.conf -z /tmp/p7-ef.api -i /tmp/p7-ef_bgp.pid -A 127.0.0.1 &
+
+# Setting up the firewall
+/etc/p7-ef_firewall.sh
+
+# Export vtysh
+export LD_LIBRARY_PATH=/usr/local/lib

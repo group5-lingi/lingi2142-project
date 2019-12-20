@@ -38,8 +38,8 @@ function mk_topo {
 	add_link P15-LG P1-BR
 	add_link ZCUST1--BR P1-BR
 	bridge_node P1-BR eth1 styx
-	bridge_node P1-BR eth2 lethe
-	bridge_node P1-BR eth3 rubicon
-	bridge_node P1-BR eth4 celadon
-	bridge_node P1-BR eth5 kerlaugar
+	bridge_node P5-AT eth2 lethe
+	bridge_node P7-EF eth3 rubicon
+	bridge_node P9-FB eth4 celadon
+	bridge_node P11-LI eth5 kerlaugar
 }

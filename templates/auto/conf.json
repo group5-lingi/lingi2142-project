@@ -55,82 +55,6 @@
                             "password": null
                         },
                         {
-                            "ip": "fde4:5:3000:1::1",
-                            "as_num": "65001",
-                            "interface": {
-                                "name": "lethe",
-                                "cost": 5,
-                                "hello_time": 10,
-                                "dead_time": 40,
-                                "instance_id": 0,
-                                "area": "0.0.0.0",
-                                "active": true,
-                                "ip": "fde4:5:3000:1::5/64",
-                                "type": "e",
-                                "linked_router": null,
-                                "description": "eBGP Link to 65001"
-                            },
-                            "type": "SC",
-                            "password": null
-                        },
-                        {
-                            "ip": "fde4::6:deaf",
-                            "as_num": "65006",
-                            "interface": {
-                                "name": "rubicon",
-                                "cost": 5,
-                                "hello_time": 10,
-                                "dead_time": 40,
-                                "instance_id": 0,
-                                "area": "0.0.0.0",
-                                "active": true,
-                                "ip": "fde4::5:deaf/64",
-                                "type": "e",
-                                "linked_router": null,
-                                "description": "eBGP Link to 65006"
-                            },
-                            "type": "P",
-                            "password": null
-                        },
-                        {
-                            "ip": "fde4:4:f001:5::beef",
-                            "as_num": "65004",
-                            "interface": {
-                                "name": "celadon",
-                                "cost": 5,
-                                "hello_time": 10,
-                                "dead_time": 40,
-                                "instance_id": 0,
-                                "area": "0.0.0.0",
-                                "active": true,
-                                "ip": "fde4:4:f001:5::dead/64",
-                                "type": "e",
-                                "linked_router": null,
-                                "description": "eBGP Link to 65004"
-                            },
-                            "type": "C",
-                            "password": null
-                        },
-                        {
-                            "ip": "fde4::7:face",
-                            "as_num": "65007",
-                            "interface": {
-                                "name": "kerlaugar",
-                                "cost": 5,
-                                "hello_time": 10,
-                                "dead_time": 40,
-                                "instance_id": 0,
-                                "area": "0.0.0.0",
-                                "active": true,
-                                "ip": "fde4::5:face/64",
-                                "type": "e",
-                                "linked_router": null,
-                                "description": "eBGP Link to 65007"
-                            },
-                            "type": "CB",
-                            "password": null
-                        },
-                        {
                             "ip": "fde4:5:1100::0071",
                             "as_num": 64513,
                             "interface": {
@@ -155,13 +79,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "kbhzkyyudo"
+                            "password": "wsaifxaeui"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ptymqtndxl"
+                            "password": "okfwjuoqaz"
                         }
                     ],
                     "interfaces": [
@@ -296,58 +220,6 @@
                             "description": "eBGP Link to 64512"
                         },
                         {
-                            "name": "lethe",
-                            "cost": 5,
-                            "hello_time": 10,
-                            "dead_time": 40,
-                            "instance_id": 0,
-                            "area": "0.0.0.0",
-                            "active": true,
-                            "ip": "fde4:5:3000:1::5/64",
-                            "type": "e",
-                            "linked_router": null,
-                            "description": "eBGP Link to 65001"
-                        },
-                        {
-                            "name": "rubicon",
-                            "cost": 5,
-                            "hello_time": 10,
-                            "dead_time": 40,
-                            "instance_id": 0,
-                            "area": "0.0.0.0",
-                            "active": true,
-                            "ip": "fde4::5:deaf/64",
-                            "type": "e",
-                            "linked_router": null,
-                            "description": "eBGP Link to 65006"
-                        },
-                        {
-                            "name": "celadon",
-                            "cost": 5,
-                            "hello_time": 10,
-                            "dead_time": 40,
-                            "instance_id": 0,
-                            "area": "0.0.0.0",
-                            "active": true,
-                            "ip": "fde4:4:f001:5::dead/64",
-                            "type": "e",
-                            "linked_router": null,
-                            "description": "eBGP Link to 65004"
-                        },
-                        {
-                            "name": "kerlaugar",
-                            "cost": 5,
-                            "hello_time": 10,
-                            "dead_time": 40,
-                            "instance_id": 0,
-                            "area": "0.0.0.0",
-                            "active": true,
-                            "ip": "fde4::5:face/64",
-                            "type": "e",
-                            "linked_router": null,
-                            "description": "eBGP Link to 65007"
-                        },
-                        {
                             "name": "P1-BR-eth9",
                             "cost": 5,
                             "hello_time": 10,
@@ -377,22 +249,6 @@
                         {
                             "interface": "styx",
                             "eth": 1
-                        },
-                        {
-                            "interface": "lethe",
-                            "eth": 2
-                        },
-                        {
-                            "interface": "rubicon",
-                            "eth": 3
-                        },
-                        {
-                            "interface": "celadon",
-                            "eth": 4
-                        },
-                        {
-                            "interface": "kerlaugar",
-                            "eth": 5
                         }
                     ],
                     "pop_name": "BR"
@@ -416,13 +272,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "cskphbyvwq"
+                            "password": "lejdmkhlxg"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xrfumadxpk"
+                            "password": "jwvnjjllah"
                         }
                     ],
                     "interfaces": [
@@ -578,91 +434,91 @@
                             "ip": "fde4:5:2100::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "kbhzkyyudo"
+                            "password": "wsaifxaeui"
                         },
                         {
                             "ip": "fde4:5:2100::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "cskphbyvwq"
+                            "password": "lejdmkhlxg"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "bbmclhrqkp"
+                            "password": "kuerszmdju"
                         },
                         {
                             "ip": "fde4:5:2200::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "jyhbjbvhjx"
+                            "password": "hcsmhxysjf"
                         },
                         {
                             "ip": "fde4:5:2200::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "qwuymajxmw"
+                            "password": "bfzokadcgx"
                         },
                         {
                             "ip": "fde4:5:2300::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "uubhuoqrmp"
+                            "password": "qxgxxyvpmn"
                         },
                         {
                             "ip": "fde4:5:2300::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "fijkvotogd"
+                            "password": "vsjkmxhaty"
                         },
                         {
                             "ip": "fde4:5:2400::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "yokclnhjja"
+                            "password": "tojiwktrhq"
                         },
                         {
                             "ip": "fde4:5:2400::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xvarspyjeg"
+                            "password": "vvxnycircj"
                         },
                         {
                             "ip": "fde4:5:2500::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "gbzvgfarpn"
+                            "password": "mszryegqtp"
                         },
                         {
                             "ip": "fde4:5:2500::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "uizppcghda"
+                            "password": "tseefcfidt"
                         },
                         {
                             "ip": "fde4:5:2600::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "wlaufpomxx"
+                            "password": "nbtsyvxrtd"
                         },
                         {
                             "ip": "fde4:5:2600::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "peygkktxkb"
+                            "password": "bdrdopfvkd"
                         },
                         {
                             "ip": "fde4:5:2700::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "zjdxleufgp"
+                            "password": "kgzphmingg"
                         },
                         {
                             "ip": "fde4:5:2700::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "aejhpqhbkn"
+                            "password": "xunnyxshew"
                         }
                     ],
                     "interfaces": [
@@ -734,91 +590,91 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "bbmclhrqkp"
+                            "password": "kuerszmdju"
                         },
                         {
                             "ip": "fde4:5:2100::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ptymqtndxl"
+                            "password": "okfwjuoqaz"
                         },
                         {
                             "ip": "fde4:5:2100::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xrfumadxpk"
+                            "password": "jwvnjjllah"
                         },
                         {
                             "ip": "fde4:5:2200::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xahraaqzqc"
+                            "password": "kvxthoptnt"
                         },
                         {
                             "ip": "fde4:5:2200::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "pdvlhujbpu"
+                            "password": "dapeqianav"
                         },
                         {
                             "ip": "fde4:5:2300::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "lhhikhbhfq"
+                            "password": "oeoxksjvoz"
                         },
                         {
                             "ip": "fde4:5:2300::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ollyewinbx"
+                            "password": "efxnfrlyqw"
                         },
                         {
                             "ip": "fde4:5:2400::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "kspjoojgeu"
+                            "password": "xklmuyneqs"
                         },
                         {
                             "ip": "fde4:5:2400::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xcygppbjnr"
+                            "password": "tsvdermegp"
                         },
                         {
                             "ip": "fde4:5:2500::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ipjnkdbpkz"
+                            "password": "hxvsocvldn"
                         },
                         {
                             "ip": "fde4:5:2500::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "akopcwwlgq"
+                            "password": "rhgosefpdi"
                         },
                         {
                             "ip": "fde4:5:2600::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "httmmslmkt"
+                            "password": "skqazkiuuv"
                         },
                         {
                             "ip": "fde4:5:2600::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "lqhhooaxtx"
+                            "password": "lxsyqbvstb"
                         },
                         {
                             "ip": "fde4:5:2700::0001",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "gwtupsohlw"
+                            "password": "wrlcnaqxrb"
                         },
                         {
                             "ip": "fde4:5:2700::0002",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "alfucascwd"
+                            "password": "sxspfxztrc"
                         }
                     ],
                     "interfaces": [
@@ -896,19 +752,39 @@
                     "routerbgp_id": "20.20.0.6",
                     "lo_ip": "fde4:5:2200::0001/128",
                     "as_num": 65005,
-                    "ebgp_neighbors": [],
+                    "ebgp_neighbors": [
+                        {
+                            "ip": "fde4:5:3000:1::1",
+                            "as_num": "65001",
+                            "interface": {
+                                "name": "lethe",
+                                "cost": 5,
+                                "hello_time": 10,
+                                "dead_time": 40,
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "active": true,
+                                "ip": "fde4:5:3000:1::5/64",
+                                "type": "e",
+                                "linked_router": null,
+                                "description": "eBGP Link to 65001"
+                            },
+                            "type": "SC",
+                            "password": null
+                        }
+                    ],
                     "ibgp_neighbors": [
                         {
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "jyhbjbvhjx"
+                            "password": "hcsmhxysjf"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xahraaqzqc"
+                            "password": "kvxthoptnt"
                         }
                     ],
                     "interfaces": [
@@ -937,13 +813,31 @@
                             "type": "i",
                             "linked_router": "P1-BR",
                             "description": "Link to P1-BR"
+                        },
+                        {
+                            "name": "lethe",
+                            "cost": 5,
+                            "hello_time": 10,
+                            "dead_time": 40,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "active": true,
+                            "ip": "fde4:5:3000:1::5/64",
+                            "type": "e",
+                            "linked_router": null,
+                            "description": "eBGP Link to 65001"
                         }
                     ],
                     "direct_neighbors": [
                         "P6-AT",
                         "P1-BR"
                     ],
-                    "bridge_nodes": [],
+                    "bridge_nodes": [
+                        {
+                            "interface": "lethe",
+                            "eth": 2
+                        }
+                    ],
                     "pop_name": "AT"
                 },
                 {
@@ -965,13 +859,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "qwuymajxmw"
+                            "password": "bfzokadcgx"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "pdvlhujbpu"
+                            "password": "dapeqianav"
                         }
                     ],
                     "interfaces": [
@@ -1033,19 +927,39 @@
                     "routerbgp_id": "20.20.0.8",
                     "lo_ip": "fde4:5:2300::0001/128",
                     "as_num": 65005,
-                    "ebgp_neighbors": [],
+                    "ebgp_neighbors": [
+                        {
+                            "ip": "fde4::6:deaf",
+                            "as_num": "65006",
+                            "interface": {
+                                "name": "rubicon",
+                                "cost": 5,
+                                "hello_time": 10,
+                                "dead_time": 40,
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "active": true,
+                                "ip": "fde4::5:deaf/64",
+                                "type": "e",
+                                "linked_router": null,
+                                "description": "eBGP Link to 65006"
+                            },
+                            "type": "P",
+                            "password": null
+                        }
+                    ],
                     "ibgp_neighbors": [
                         {
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "uubhuoqrmp"
+                            "password": "qxgxxyvpmn"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "lhhikhbhfq"
+                            "password": "oeoxksjvoz"
                         }
                     ],
                     "interfaces": [
@@ -1074,13 +988,31 @@
                             "type": "i",
                             "linked_router": "P1-BR",
                             "description": "Link to P1-BR"
+                        },
+                        {
+                            "name": "rubicon",
+                            "cost": 5,
+                            "hello_time": 10,
+                            "dead_time": 40,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "active": true,
+                            "ip": "fde4::5:deaf/64",
+                            "type": "e",
+                            "linked_router": null,
+                            "description": "eBGP Link to 65006"
                         }
                     ],
                     "direct_neighbors": [
                         "P8-EF",
                         "P1-BR"
                     ],
-                    "bridge_nodes": [],
+                    "bridge_nodes": [
+                        {
+                            "interface": "rubicon",
+                            "eth": 3
+                        }
+                    ],
                     "pop_name": "EF"
                 },
                 {
@@ -1102,13 +1034,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "fijkvotogd"
+                            "password": "vsjkmxhaty"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ollyewinbx"
+                            "password": "efxnfrlyqw"
                         }
                     ],
                     "interfaces": [
@@ -1170,19 +1102,39 @@
                     "routerbgp_id": "20.20.0.10",
                     "lo_ip": "fde4:5:2400::0001/128",
                     "as_num": 65005,
-                    "ebgp_neighbors": [],
+                    "ebgp_neighbors": [
+                        {
+                            "ip": "fde4:4:f001:5::beef",
+                            "as_num": "65004",
+                            "interface": {
+                                "name": "celadon",
+                                "cost": 5,
+                                "hello_time": 10,
+                                "dead_time": 40,
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "active": true,
+                                "ip": "fde4:4:f001:5::dead/64",
+                                "type": "e",
+                                "linked_router": null,
+                                "description": "eBGP Link to 65004"
+                            },
+                            "type": "C",
+                            "password": null
+                        }
+                    ],
                     "ibgp_neighbors": [
                         {
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "yokclnhjja"
+                            "password": "tojiwktrhq"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "kspjoojgeu"
+                            "password": "xklmuyneqs"
                         }
                     ],
                     "interfaces": [
@@ -1211,13 +1163,31 @@
                             "type": "i",
                             "linked_router": "P1-BR",
                             "description": "Link to P1-BR"
+                        },
+                        {
+                            "name": "celadon",
+                            "cost": 5,
+                            "hello_time": 10,
+                            "dead_time": 40,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "active": true,
+                            "ip": "fde4:4:f001:5::dead/64",
+                            "type": "e",
+                            "linked_router": null,
+                            "description": "eBGP Link to 65004"
                         }
                     ],
                     "direct_neighbors": [
                         "P10-FB",
                         "P1-BR"
                     ],
-                    "bridge_nodes": [],
+                    "bridge_nodes": [
+                        {
+                            "interface": "celadon",
+                            "eth": 4
+                        }
+                    ],
                     "pop_name": "FB"
                 },
                 {
@@ -1239,13 +1209,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xvarspyjeg"
+                            "password": "vvxnycircj"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "xcygppbjnr"
+                            "password": "tsvdermegp"
                         }
                     ],
                     "interfaces": [
@@ -1307,19 +1277,39 @@
                     "routerbgp_id": "20.20.0.12",
                     "lo_ip": "fde4:5:2500::0001/128",
                     "as_num": 65005,
-                    "ebgp_neighbors": [],
+                    "ebgp_neighbors": [
+                        {
+                            "ip": "fde4::7:face",
+                            "as_num": "65007",
+                            "interface": {
+                                "name": "kerlaugar",
+                                "cost": 5,
+                                "hello_time": 10,
+                                "dead_time": 40,
+                                "instance_id": 0,
+                                "area": "0.0.0.0",
+                                "active": true,
+                                "ip": "fde4::5:face/64",
+                                "type": "e",
+                                "linked_router": null,
+                                "description": "eBGP Link to 65007"
+                            },
+                            "type": "CB",
+                            "password": null
+                        }
+                    ],
                     "ibgp_neighbors": [
                         {
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "gbzvgfarpn"
+                            "password": "mszryegqtp"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "ipjnkdbpkz"
+                            "password": "hxvsocvldn"
                         }
                     ],
                     "interfaces": [
@@ -1348,13 +1338,31 @@
                             "type": "i",
                             "linked_router": "P1-BR",
                             "description": "Link to P1-BR"
+                        },
+                        {
+                            "name": "kerlaugar",
+                            "cost": 5,
+                            "hello_time": 10,
+                            "dead_time": 40,
+                            "instance_id": 0,
+                            "area": "0.0.0.0",
+                            "active": true,
+                            "ip": "fde4::5:face/64",
+                            "type": "e",
+                            "linked_router": null,
+                            "description": "eBGP Link to 65007"
                         }
                     ],
                     "direct_neighbors": [
                         "P12-LI",
                         "P1-BR"
                     ],
-                    "bridge_nodes": [],
+                    "bridge_nodes": [
+                        {
+                            "interface": "kerlaugar",
+                            "eth": 5
+                        }
+                    ],
                     "pop_name": "LI"
                 },
                 {
@@ -1376,13 +1384,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "uizppcghda"
+                            "password": "tseefcfidt"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "akopcwwlgq"
+                            "password": "rhgosefpdi"
                         }
                     ],
                     "interfaces": [
@@ -1450,13 +1458,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "wlaufpomxx"
+                            "password": "nbtsyvxrtd"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "httmmslmkt"
+                            "password": "skqazkiuuv"
                         }
                     ],
                     "interfaces": [
@@ -1513,13 +1521,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "peygkktxkb"
+                            "password": "bdrdopfvkd"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "lqhhooaxtx"
+                            "password": "lxsyqbvstb"
                         }
                     ],
                     "interfaces": [
@@ -1587,13 +1595,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "zjdxleufgp"
+                            "password": "kgzphmingg"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "gwtupsohlw"
+                            "password": "wrlcnaqxrb"
                         }
                     ],
                     "interfaces": [
@@ -1650,13 +1658,13 @@
                             "ip": "fde4:5:2100::0003",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "aejhpqhbkn"
+                            "password": "xunnyxshew"
                         },
                         {
                             "ip": "fde4:5:2100::0004",
                             "as_num": 65005,
                             "type": "IBGP",
-                            "password": "alfucascwd"
+                            "password": "sxspfxztrc"
                         }
                     ],
                     "interfaces": [

@@ -16,7 +16,10 @@ interface ${interface['name']}
     %if interface['type'] == 'i':
     ipv6 ospf6 hello-interval ${interface['hello_time']}
     ipv6 ospf6 dead-interval ${interface['dead_time']}
-    ipv6 ospf6 message-digest-key 1 md5 testPassword
+
+! This line works with CISCO-routers and with FRRouting once ospf6 passwords are implemented
+!   ipv6 ospf6 message-digest-key 1 md5 testPassword
+
     %else:
     ipv6 ospf6 passive
     %endif
